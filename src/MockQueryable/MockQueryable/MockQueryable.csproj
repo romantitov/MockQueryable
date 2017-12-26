@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>MockQueryable.Core</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Roman Titov</Authors>
+    <Description>Async operations with generic collections, to provide for collections such List&lt;T&gt; execute operations such ToListAsync, FirstOrDefaultAsync etc.</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Implemented: IAsyncQueryProvider,IAsyncEnumerable&lt;T&gt;,IAsyncEnumerator&lt;T&gt;, IOrderedQueryable&lt;T&gt;</PackageReleaseNotes>
+    <PackageTags>Queryable ToListAsync mock firstordefaultasync</PackageTags>
+    <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
