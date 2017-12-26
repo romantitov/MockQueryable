@@ -3,15 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>MockQueryable.Core</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Authors>Roman Titov</Authors>
-    <Description>Async operations with generic collections, to provide for collections such List&lt;T&gt; execute operations such ToListAsync, FirstOrDefaultAsync etc.</Description>
+    <Description>Async operations with generic collections, to provide for collections such List&lt;T&gt; execute EntityFrameworkCore operations such ToListAsync, FirstOrDefaultAsync etc.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Implemented: IAsyncQueryProvider,IAsyncEnumerable&lt;T&gt;,IAsyncEnumerator&lt;T&gt;, IOrderedQueryable&lt;T&gt;</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags>Queryable ToListAsync mock firstordefaultasync</PackageTags>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
