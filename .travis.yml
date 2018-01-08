@@ -1,0 +1,17 @@
+language: csharp
+
+dotnet: 2.0.0
+
+dist: trusty
+
+solution: ./src/MockQueryable/MockQueryable.sln
+
+script:
+
+  - cd src
+
+  - dotnet restore
+
+  - dotnet build --configuration=Release
+
+  - dotnet test ./MockQueryable/MockQueryable.Sample/MockQueryable.Sample.csproj
