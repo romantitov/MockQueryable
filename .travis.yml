@@ -8,10 +8,10 @@ solution: ./src/MockQueryable/MockQueryable.sln
 
 script:
 
-  - cd src
+  - cd src/MockQueryable
 
   - dotnet restore
 
   - dotnet build --configuration=Release
 
-  - dotnet test ./MockQueryable/MockQueryable.Sample/MockQueryable.Sample.csproj
+  - dotnet test ./MockQueryable.Sample/MockQueryable.Sample.csproj
