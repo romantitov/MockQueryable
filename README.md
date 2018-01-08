@@ -2,6 +2,7 @@
 # MockQueryable
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
+[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
 
 Extension for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq)
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
