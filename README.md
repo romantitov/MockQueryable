@@ -4,6 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
 [![Build Status](https://travis-ci.org/romantitov/MockQueryable.svg?branch=master)](https://travis-ci.org/romantitov/MockQueryable)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
+[![MyGet CI](https://img.shields.io/myget/mockqueryable/v/MockQueryable.Moq.svg)](http://myget.org/gallery/mockqueryable)
 
 
 Extension for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq)
