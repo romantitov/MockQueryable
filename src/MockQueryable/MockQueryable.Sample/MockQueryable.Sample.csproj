@@ -7,10 +7,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="MockQueryable.Moq" Version="1.0.1" />
     <PackageReference Include="Moq" Version="4.8.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MockQueryable.Moq\MockQueryable.Moq.csproj" />
+    <ProjectReference Include="..\MockQueryable\MockQueryable.csproj" />
   </ItemGroup>
 
 </Project>
