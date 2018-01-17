@@ -11,10 +11,10 @@ When writing tests for your application it is often desirable to avoid hitting t
     <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>MockQueryable.Moq</PackageId>
-	<PackageVersion>1.0.1</PackageVersion>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>1.0.0.1</FileVersion>
+	<PackageVersion>1.0.2</PackageVersion>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
