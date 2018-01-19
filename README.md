@@ -30,7 +30,7 @@ Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/
 
 ### Where can I get it?
 
-First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). Then, install [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) from the package manager console:
+First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). Then, install [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) from the package manager console: 
 
 ```
 PM> Install-Package MockQueryable.Moq
