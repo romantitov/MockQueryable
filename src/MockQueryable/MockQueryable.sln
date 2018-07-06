@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockQueryable.Moq", "MockQu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockQueryable.Sample", "MockQueryable.Sample\MockQueryable.Sample.csproj", "{84563547-43DC-4A5D-AD8B-AC06166D05CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockQueryable.NSubstitute", "MockQueryable.NSubstitute\MockQueryable.NSubstitute.csproj", "{FAAD1998-2471-45B6-9458-807B314E050F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{84563547-43DC-4A5D-AD8B-AC06166D05CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84563547-43DC-4A5D-AD8B-AC06166D05CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84563547-43DC-4A5D-AD8B-AC06166D05CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAAD1998-2471-45B6-9458-807B314E050F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAAD1998-2471-45B6-9458-807B314E050F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAAD1998-2471-45B6-9458-807B314E050F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAAD1998-2471-45B6-9458-807B314E050F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

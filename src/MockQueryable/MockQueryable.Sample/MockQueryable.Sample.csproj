@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MockQueryable.Moq\MockQueryable.Moq.csproj" />
+    <ProjectReference Include="..\MockQueryable.NSubstitute\MockQueryable.NSubstitute.csproj" />
     <ProjectReference Include="..\MockQueryable\MockQueryable.csproj" />
   </ItemGroup>
 
