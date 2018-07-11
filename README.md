@@ -36,13 +36,13 @@ Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/
 
 First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). 
 
-If you use **Moq** - then, install [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) from the package manager console:
+If you are using **Moq** - then, install [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) from the package manager console:
 
 ```
 PM> Install-Package MockQueryable.Moq
 ```
 
-If you use **NSubstitute** - then, install [MockQueryable.NSubstitute](https://www.nuget.org/packages/MockQueryable.NSubstitute/) from the package manager console:
+If you are using **NSubstitute** - then, install [MockQueryable.NSubstitute](https://www.nuget.org/packages/MockQueryable.NSubstitute/) from the package manager console:
 
 ```
 PM> Install-Package MockQueryable.NSubstitute
