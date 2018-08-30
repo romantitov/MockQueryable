@@ -32,6 +32,26 @@ _userRepository.GetQueryable().Returns(mock);
 ```
 Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
 
+Do you prefer *DbSet*? 
+
+```csharp
+//1 - create a List<T> with test items
+var users = new List<UserEntity>()
+{
+  new UserEntity{LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
+  ...
+};
+
+//2 - build mock by extension
+var mock = users.AsQueryable().BuildMockDbSet();
+
+//3 - setup DbSet for Moq
+var userRepository = new TestDbSetRepository(mock.Object);
+
+//3 - setup DbSet for NSubstitute
+var userRepository = new TestDbSetRepository(mock);
+```
+
 ### Where can I get it?
 
 First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). 
