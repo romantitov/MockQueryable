@@ -23,16 +23,12 @@ namespace MockQueryable.NSubstitute
         {
             var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-
-            var asyncEnumerable = ((IAsyncEnumerable<TEntity>)mock);
-            asyncEnumerable.GetEnumerator().Returns(enumerable.GetEnumerator());
-
+            ((IAsyncEnumerable<TEntity>)mock).GetEnumerator().Returns(enumerable.GetEnumerator());
             var queryable = ((IQueryable<TEntity>)mock);
             queryable.Provider.Returns(enumerable);
             queryable.Expression.Returns(data?.Expression);
             queryable.ElementType.Returns(data?.ElementType);
             queryable.GetEnumerator().Returns(data?.GetEnumerator());
-
             return mock;
         }
     }
