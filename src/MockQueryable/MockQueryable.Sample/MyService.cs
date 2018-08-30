@@ -35,7 +35,7 @@ namespace MockQueryable.Sample
 				throw new ApplicationException("Users with DateOfBirth more than limit");
 			}
 
-			await _userRepository.CreateUser(new UserEntity()
+			await _userRepository.CreateUser(new UserEntity
 			{
 				FirstName = firstName,
 				LastName = lastName,
@@ -68,6 +68,7 @@ namespace MockQueryable.Sample
 
 		Task CreateUser(UserEntity user);
 	}
+
 
 	public class UserReport
 	{
