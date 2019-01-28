@@ -1,6 +1,6 @@
 language: csharp
 
-dotnet: 2.0.0
+dotnet: 2.1
 
 dist: trusty
 
@@ -15,3 +15,5 @@ script:
   - dotnet build --configuration=Release
 
   - dotnet test ./MockQueryable.Sample/MockQueryable.Sample.csproj
+  
+
