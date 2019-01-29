@@ -30,12 +30,19 @@ namespace MockQueryable
 
 		public IQueryable CreateQuery(Expression expression)
 		{
-			return new TestAsyncEnumerable<T>(expression);
+            if (expression is MethodCallExpression m)
+            {
+                var resultType = m.Method.ReturnType; // it should be IQueryable<T>
+                var tElement = resultType.GetGenericArguments().First();
+                var queryType = typeof(TestAsyncEnumerable<>).MakeGenericType(tElement);
+                return (IQueryable)Activator.CreateInstance(queryType, expression);
+            }
+            return new TestAsyncEnumerable<T>(expression);
 		}
 
 		public IQueryable<TEntity> CreateQuery<TEntity>(Expression expression)
 		{
-			return new TestAsyncEnumerable<TEntity>(expression);
+            return new TestAsyncEnumerable<TEntity>(expression);
 		}
 
 		public object Execute(Expression expression)

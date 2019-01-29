@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MockQueryable.Sample
@@ -10,7 +12,15 @@ namespace MockQueryable.Sample
 	{
 		private readonly IUserRepository _userRepository;
 
-		public MyService(IUserRepository userRepository)
+	    public static void Initialize()
+	    {
+	        Mapper.Initialize(cfg => cfg.CreateMap<UserEntity, UserReport>()
+	                                 .ForMember(dto => dto.FirstName, conf => conf.MapFrom(ol => ol.FirstName))
+	                                 .ForMember(dto => dto.LastName, conf => conf.MapFrom(ol => ol.LastName)));
+            Mapper.Configuration.AssertConfigurationIsValid();
+	    }
+
+	    public MyService(IUserRepository userRepository)
 		{
 			this._userRepository = userRepository;
 		}
@@ -60,7 +70,16 @@ namespace MockQueryable.Sample
 		}
 
 
-	}
+	    public async Task<List<UserReport>> GetUserReportsAutoMap(DateTime dateFrom, DateTime dateTo)
+	    {
+	        var query = _userRepository.GetQueryable();
+
+	        query = query.Where(x => x.DateOfBirth >= dateFrom.Date);
+	        query = query.Where(x => x.DateOfBirth <= dateTo.Date);
+
+	        return await query.ProjectTo<UserReport>().ToListAsync();
+	    }
+    }
 
 	public interface IUserRepository
 	{
