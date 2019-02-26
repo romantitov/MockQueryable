@@ -31,5 +31,18 @@ namespace MockQueryable.NSubstitute
             queryable.GetEnumerator().Returns(data?.GetEnumerator());
             return mock;
         }
+
+        public static DbQuery<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+        {
+            var mock = Substitute.For<DbQuery<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
+            var enumerable = new TestAsyncEnumerable<TEntity>(data);
+            ((IAsyncEnumerable<TEntity>)mock).GetEnumerator().Returns(enumerable.GetEnumerator());
+            var queryable = ((IQueryable<TEntity>)mock);
+            queryable.Provider.Returns(enumerable);
+            queryable.Expression.Returns(data?.Expression);
+            queryable.ElementType.Returns(data?.ElementType);
+            queryable.GetEnumerator().Returns(data?.GetEnumerator());
+            return mock;
+        }
     }
 }
