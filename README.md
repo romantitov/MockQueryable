@@ -57,6 +57,20 @@ var userRepository = new TestDbSetRepository(mock.Object);
 //3 - setup DbSet for NSubstitute
 var userRepository = new TestDbSetRepository(mock);
 ```
+
+Do you use *DbQuery*? 
+
+```csharp
+//2 - build mock by extension
+var mock = users.AsQueryable().BuildMockDbQuery();
+
+//3 - setup the mock as Queryable for Moq
+_userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
+
+//3 - setup the mock as Queryable for NSubstitute
+_userRepository.GetQueryable().Returns(mock);
+```
+
 Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
 
 ### Where can I get it?
