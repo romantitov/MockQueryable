@@ -8,7 +8,7 @@
 
 
 
-Extensions for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq) or [NSubstitute](http://nsubstitute.github.io/)
+Extensions for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) (EFCore) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq) or [NSubstitute](http://nsubstitute.github.io/)
 When writing tests for your application it is often desirable to avoid hitting the database. The extensions allow you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
 
 ### When should I use it?
