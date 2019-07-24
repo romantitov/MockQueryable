@@ -18,7 +18,7 @@ When writing tests for your application it is often desirable to avoid hitting t
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.8.0" />
+    <PackageReference Include="Moq" Version="4.12.0" />
   </ItemGroup>
 
   <ItemGroup>
