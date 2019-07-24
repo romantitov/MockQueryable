@@ -53,8 +53,7 @@ namespace MockQueryable.Sample
 			});
 
 		}
-
-
+        
 		public async Task<List<UserReport>> GetUserReports(DateTime dateFrom, DateTime dateTo)
 		{
 			var query = _userRepository.GetQueryable();
