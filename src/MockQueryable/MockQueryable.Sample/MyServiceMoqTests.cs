@@ -3,23 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
-	[TestFixture]
+    [TestFixture]
     public class MyServiceMoqTests
 	{
         private static readonly CultureInfo UsCultureInfo = new CultureInfo("en-US");
-
-        [OneTimeSetUp]
-	    public void SetUp()
-	    {
-	        MyService.Initialize();
-        }
 
         [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
 		[TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]

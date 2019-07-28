@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Roman Titov</Authors>
-    <Company>CactusSoft</Company>
+    <Company></Company>
     <Version>1.1.0</Version>
     <Description>Extension for mocking Entity Framework Core operations such ToListAsync, FirstOrDefaultAsync etc. by NSubstitute
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.</Description>
