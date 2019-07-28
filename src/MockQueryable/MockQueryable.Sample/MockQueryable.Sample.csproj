@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="FakeItEasy" Version="5.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="Moq" Version="4.8.3" />
@@ -15,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MockQueryable.FakeItEasy\MockQueryable.FakeItEasy.csproj" />
     <ProjectReference Include="..\MockQueryable.Moq\MockQueryable.Moq.csproj" />
     <ProjectReference Include="..\MockQueryable.NSubstitute\MockQueryable.NSubstitute.csproj" />
     <ProjectReference Include="..\MockQueryable\MockQueryable.csproj" />
