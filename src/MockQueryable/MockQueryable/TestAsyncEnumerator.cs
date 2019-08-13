@@ -17,13 +17,13 @@ namespace MockQueryable
 
 		public ValueTask DisposeAsync()
 		{
-            _enumerator.Dispose();
-            return new ValueTask();
-        }
+			_enumerator.Dispose();
+			return new ValueTask();
+		}
 
 		public ValueTask<bool> MoveNextAsync()
-        {
-            return new ValueTask<bool>(_enumerator.MoveNext());
-        }
-    }
+		{
+			return new ValueTask<bool>(_enumerator.MoveNext());
+		}
+	}
 }
