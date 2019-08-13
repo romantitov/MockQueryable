@@ -13,11 +13,8 @@ namespace MockQueryable.NSubstitute
         {
             var mock = Substitute.For<IQueryable<TEntity>, IAsyncEnumerable<TEntity>> ();
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            ((IAsyncEnumerable<TEntity>)mock).GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
-            mock.Provider.Returns(enumerable);
-            mock.Expression.Returns(data?.Expression);
-            mock.ElementType.Returns(data?.ElementType);
-            mock.GetEnumerator().Returns(data?.GetEnumerator());
+            ((IAsyncEnumerable<TEntity>)mock).ConfigureAsyncEnumerableCalls(enumerable);
+            mock.ConfigureQueryableCalls(enumerable, data);
             return mock;
         }
 
@@ -25,12 +22,8 @@ namespace MockQueryable.NSubstitute
         {
             var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            ((IAsyncEnumerable<TEntity>)mock).GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
-            var queryable = ((IQueryable<TEntity>)mock);
-            queryable.Provider.Returns(enumerable);
-            queryable.Expression.Returns(data?.Expression);
-            queryable.ElementType.Returns(data?.ElementType);
-            queryable.GetEnumerator().Returns(data?.GetEnumerator());
+            mock.ConfigureAsyncEnumerableCalls(enumerable);
+            mock.ConfigureQueryableCalls(enumerable, data);
             return mock;
         }
 
@@ -39,13 +32,25 @@ namespace MockQueryable.NSubstitute
         {
             var mock = Substitute.For<DbQuery<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            ((IAsyncEnumerable<TEntity>)mock).GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
-            var queryable = ((IQueryable<TEntity>)mock);
-            queryable.Provider.Returns(enumerable);
-            queryable.Expression.Returns(data?.Expression);
-            queryable.ElementType.Returns(data?.ElementType);
-            queryable.GetEnumerator().Returns(data?.GetEnumerator());
+            mock.ConfigureAsyncEnumerableCalls(enumerable);
+            mock.ConfigureQueryableCalls(enumerable, data);
             return mock;
+        }
+
+        private static void ConfigureQueryableCalls<TEntity>(this IQueryable<TEntity> mock, IQueryProvider queryProvider, IQueryable<TEntity> data)
+            where TEntity : class
+        {
+            mock.Provider.Returns(queryProvider);
+            mock.Expression.Returns(data?.Expression);
+            mock.ElementType.Returns(data?.ElementType);
+            mock.GetEnumerator().Returns(data?.GetEnumerator());
+        }
+
+        private static void ConfigureAsyncEnumerableCalls<TEntity>(
+            this IAsyncEnumerable<TEntity> mock,
+            IAsyncEnumerable<TEntity> enumerable)
+        {
+            mock.GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
         }
     }
 }

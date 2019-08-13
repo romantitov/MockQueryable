@@ -13,11 +13,9 @@ namespace MockQueryable.FakeItEasy
         {
             var mock = A.Fake<IQueryable<TEntity>>(d=>d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            A.CallTo(() => ((IAsyncEnumerable<TEntity>) mock).GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Provider).Returns(enumerable);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Expression).Returns(data?.Expression);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).ElementType).Returns(data?.ElementType);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).GetEnumerator()).Returns(data?.GetEnumerator());
+            ((IAsyncEnumerable<TEntity>)mock).ConfigureAsyncEnumerableCalls(enumerable);
+            mock.ConfigureQueryableCalls(enumerable, data);
+
             return mock;
         }
 
@@ -25,11 +23,8 @@ namespace MockQueryable.FakeItEasy
         {
             var mock = A.Fake<DbSet<TEntity>>(d => d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            A.CallTo(() => ((IAsyncEnumerable<TEntity>)mock).GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Provider).Returns(enumerable);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Expression).Returns(data?.Expression);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).ElementType).Returns(data?.ElementType);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).GetEnumerator()).Returns(data?.GetEnumerator());
+            mock.ConfigureQueryableCalls(enumerable, data);
+            mock.ConfigureAsyncEnumerableCalls(enumerable);
             return mock;
         }
 
@@ -38,12 +33,25 @@ namespace MockQueryable.FakeItEasy
         {
             var mock = A.Fake<DbQuery<TEntity>>(d => d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
             var enumerable = new TestAsyncEnumerable<TEntity>(data);
-            A.CallTo(() => ((IAsyncEnumerable<TEntity>)mock).GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Provider).Returns(enumerable);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).Expression).Returns(data?.Expression);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).ElementType).Returns(data?.ElementType);
-            A.CallTo(() => ((IQueryable<TEntity>)mock).GetEnumerator()).Returns(data?.GetEnumerator());
+            mock.ConfigureQueryableCalls(enumerable, data);
+            mock.ConfigureAsyncEnumerableCalls(enumerable);
             return mock;
+        }
+
+        private static void ConfigureQueryableCalls<TEntity>(this IQueryable<TEntity> mock, IQueryProvider queryProvider, IQueryable<TEntity> data)
+            where TEntity : class
+        {
+            A.CallTo(() => mock.Provider).Returns(queryProvider);
+            A.CallTo(() => mock.Expression).Returns(data?.Expression);
+            A.CallTo(() => mock.ElementType).Returns(data?.ElementType);
+            A.CallTo(() => mock.GetEnumerator()).Returns(data?.GetEnumerator());
+        }
+
+        private static void ConfigureAsyncEnumerableCalls<TEntity>(
+            this IAsyncEnumerable<TEntity> mock,
+            IAsyncEnumerable<TEntity> enumerable)
+        {
+            A.CallTo(() => mock.GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
         }
     }
 }
