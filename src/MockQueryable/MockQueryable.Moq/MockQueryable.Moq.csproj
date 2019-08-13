@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Roman Titov</Authors>
     <Company></Company>
-	<Version>1.1.0</Version>
+	<Version>1.2.0-alpha</Version>
     <Description>Extension for mocking Entity Framework Core operations such ToListAsync, FirstOrDefaultAsync etc. by Moq
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.</Description>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
@@ -12,8 +12,8 @@ When writing tests for your application it is often desirable to avoid hitting t
     <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>MockQueryable.Moq</PackageId>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <PackageReleaseNotes>AutoMapper support</PackageReleaseNotes>
   </PropertyGroup>
 
