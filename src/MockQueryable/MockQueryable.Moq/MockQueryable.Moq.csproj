@@ -9,13 +9,14 @@
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.</Description>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
-    <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests</PackageTags>
+    <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>MockQueryable.Moq</PackageId>
     <Version>3.0.0</Version>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
-    <PackageReleaseNotes>AutoMapper support</PackageReleaseNotes>
+    <PackageReleaseNotes>EntityFrameworkCore 3.0.0 supported</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,13 @@ When writing tests for your application it is often desirable to avoid hitting t
 
   <ItemGroup>
     <ProjectReference Include="..\MockQueryable\MockQueryable.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

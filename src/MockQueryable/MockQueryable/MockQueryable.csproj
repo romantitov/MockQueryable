@@ -6,8 +6,8 @@
     <Authors>Roman Titov</Authors>
     <Description>Async operations with generic collections, to provide for collections such List&lt;T&gt; execute EntityFrameworkCore operations such ToListAsync, FirstOrDefaultAsync etc.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>AutoMapper support</PackageReleaseNotes>
-    <PackageTags>Queryable ToListAsync mock firstordefaultasync</PackageTags>
+    <PackageReleaseNotes>EntityFrameworkCore 3.0.0 supported</PackageReleaseNotes>
+    <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -15,6 +15,7 @@
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Company></Company>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,6 +24,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
