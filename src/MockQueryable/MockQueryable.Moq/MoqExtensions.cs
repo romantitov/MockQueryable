@@ -27,7 +27,7 @@ namespace MockQueryable.Moq
 			return mock;
 		}
 
-		[Obsolete]
+		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
 		public static Mock<DbQuery<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data)
 			where TEntity : class
 		{

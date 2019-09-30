@@ -4,15 +4,15 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Roman Titov</Authors>
     <Company></Company>
-    <Version>1.2.0-alpha</Version>
     <Description>Extension for mocking Entity Framework Core operations such ToListAsync, FirstOrDefaultAsync etc. by NSubstitute
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.</Description>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <PackageTags>NSubstitute EntityFrameworkCore Queryable mock EF UnitTests</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <PackageReleaseNotes>AutoMapper support</PackageReleaseNotes>
   </PropertyGroup>
 

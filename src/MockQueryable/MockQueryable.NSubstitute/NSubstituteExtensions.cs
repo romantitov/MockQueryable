@@ -27,7 +27,7 @@ namespace MockQueryable.NSubstitute
 			return mock;
 		}
 
-		[Obsolete]
+		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
 		public static DbQuery<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
 			var mock = Substitute.For<DbQuery<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
