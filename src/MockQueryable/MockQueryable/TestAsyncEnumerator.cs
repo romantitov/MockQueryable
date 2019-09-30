@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MockQueryable
@@ -16,13 +15,15 @@ namespace MockQueryable
 
 		public T Current => _enumerator.Current;
 
-		public void Dispose()
+		public ValueTask DisposeAsync()
 		{
+			_enumerator.Dispose();
+			return new ValueTask();
 		}
 
-		public Task<bool> MoveNext(CancellationToken cancellationToken)
+		public ValueTask<bool> MoveNextAsync()
 		{
-			return Task.FromResult(_enumerator.MoveNext());
+			return new ValueTask<bool>(_enumerator.MoveNext());
 		}
 	}
 }

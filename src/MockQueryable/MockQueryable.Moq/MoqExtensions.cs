@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -11,36 +13,48 @@ namespace MockQueryable.Moq
 		{
 			var mock = new Mock<IQueryable<TEntity>>();
 			var enumerable = new TestAsyncEnumerable<TEntity>(data);
-			mock.As<IAsyncEnumerable<TEntity>>().Setup(d => d.GetEnumerator()).Returns(enumerable.GetEnumerator);
-			mock.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(enumerable);
-			mock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(data?.Expression);
-			mock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(data?.ElementType);
-			mock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(data?.GetEnumerator());
+			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
+			mock.ConfigureQueryableCalls(enumerable, data);
 			return mock;
 		}
 
-	    public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
-	    {
-	        var mock = new Mock<DbSet<TEntity>>();
-	        var enumerable = new TestAsyncEnumerable<TEntity>(data);
-	        mock.As<IAsyncEnumerable<TEntity>>().Setup(d => d.GetEnumerator()).Returns(enumerable.GetEnumerator);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(enumerable);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(data?.Expression);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(data?.ElementType);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(data?.GetEnumerator());
-	        return mock;
-        }
+		public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		{
+			var mock = new Mock<DbSet<TEntity>>();
+			var enumerable = new TestAsyncEnumerable<TEntity>(data);
+			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
+			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+			return mock;
+		}
 
-        public static Mock<DbQuery<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
-	    {
-	        var mock = new Mock<DbQuery<TEntity>>();
-	        var enumerable = new TestAsyncEnumerable<TEntity>(data);
-	        mock.As<IAsyncEnumerable<TEntity>>().Setup(d => d.GetEnumerator()).Returns(enumerable.GetEnumerator);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.Provider).Returns(enumerable);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(data?.Expression);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(data?.ElementType);
-	        mock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(data?.GetEnumerator());
-	        return mock;
-        }
-    }
+		[Obsolete]
+		public static Mock<DbQuery<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data)
+			where TEntity : class
+		{
+			var mock = new Mock<DbQuery<TEntity>>();
+			var enumerable = new TestAsyncEnumerable<TEntity>(data);
+			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
+			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+			return mock;
+		}
+
+		private static void ConfigureQueryableCalls<TEntity>(
+			this Mock<IQueryable<TEntity>> mock,
+			IQueryProvider queryProvider,
+			IQueryable<TEntity> data) where TEntity : class
+		{
+			mock.Setup(m => m.Provider).Returns(queryProvider);
+			mock.Setup(m => m.Expression).Returns(data?.Expression);
+			mock.Setup(m => m.ElementType).Returns(data?.ElementType);
+			mock.Setup(m => m.GetEnumerator()).Returns(data?.GetEnumerator());
+		}
+
+		private static void ConfigureAsyncEnumerableCalls<TEntity>(
+			this Mock<IAsyncEnumerable<TEntity>> mock,
+			IAsyncEnumerable<TEntity> enumerable)
+		{
+			mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+				.Returns(() => enumerable.GetAsyncEnumerator());
+		}
+	}
 }

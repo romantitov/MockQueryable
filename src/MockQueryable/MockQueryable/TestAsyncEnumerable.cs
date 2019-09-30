@@ -23,26 +23,27 @@ namespace MockQueryable
 			_enumerable = enumerable;
 		}
 
-		public IAsyncEnumerator<T> GetEnumerator()
+		public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
 		{
 			return new TestAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
 		}
 
 		public IQueryable CreateQuery(Expression expression)
 		{
-            if (expression is MethodCallExpression m)
-            {
-                var resultType = m.Method.ReturnType; // it should be IQueryable<T>
-                var tElement = resultType.GetGenericArguments().First();
-                var queryType = typeof(TestAsyncEnumerable<>).MakeGenericType(tElement);
-                return (IQueryable)Activator.CreateInstance(queryType, expression);
-            }
-            return new TestAsyncEnumerable<T>(expression);
+			if (expression is MethodCallExpression m)
+			{
+				var resultType = m.Method.ReturnType; // it should be IQueryable<T>
+				var tElement = resultType.GetGenericArguments().First();
+				var queryType = typeof(TestAsyncEnumerable<>).MakeGenericType(tElement);
+				return (IQueryable) Activator.CreateInstance(queryType, expression);
+			}
+
+			return new TestAsyncEnumerable<T>(expression);
 		}
 
 		public IQueryable<TEntity> CreateQuery<TEntity>(Expression expression)
 		{
-            return new TestAsyncEnumerable<TEntity>(expression);
+			return new TestAsyncEnumerable<TEntity>(expression);
 		}
 
 		public object Execute(Expression expression)
@@ -55,14 +56,20 @@ namespace MockQueryable
 			return CompileExpressionItem<TResult>(expression);
 		}
 
-		public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
+		public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
 		{
-			return new TestAsyncEnumerable<TResult>(expression);
-		}
+			var expectedResultType = typeof(TResult).GetGenericArguments()[0];
+			var executionResult = typeof(IQueryProvider)
+				.GetMethod(
+					name: nameof(IQueryProvider.Execute),
+					genericParameterCount: 1,
+					types: new[] {typeof(Expression)})
+				.MakeGenericMethod(expectedResultType)
+				.Invoke(this, new[] {expression});
 
-		public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
-		{
-			return Task.FromResult(CompileExpressionItem<TResult>(expression));
+			return (TResult) typeof(Task).GetMethod(nameof(Task.FromResult))
+				.MakeGenericMethod(expectedResultType)
+				.Invoke(null, new[] {executionResult});
 		}
 
 
