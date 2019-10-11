@@ -8,23 +8,29 @@
 When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.</Description>
     <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
-    <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
+    <PackageTags>NSubstitute EntityFrameworkCore Queryable mock EF UnitTests</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
-    <PackageReleaseNotes>EntityFrameworkCore 3.0.0 supported</PackageReleaseNotes>
+    <Version>3.0.1</Version>
+    <AssemblyVersion>3.0.0.1</AssemblyVersion>
+    <FileVersion>3.0.0.1</FileVersion>
+    <PackageReleaseNotes>EntityFrameworkCore 3.0.0 supported, NSubstitute 4.2.1 required</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MockQueryable\MockQueryable.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="Assets\logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE">
       <Pack>True</Pack>
