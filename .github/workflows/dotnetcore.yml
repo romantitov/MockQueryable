@@ -14,9 +14,7 @@ jobs:
       with:
         dotnet-version: 2.2.108
         
-    - name: Restore with dotnet
-      run: dotnet restore **/*.sln
     - name: Build with dotnet
-      run: dotnet build **/*.sln --configuration Release
+      run: dotnet build --configuration Release
     - name: Test with dotnet
-      run: dotnet test **/*.sln
+      run: dotnet test
