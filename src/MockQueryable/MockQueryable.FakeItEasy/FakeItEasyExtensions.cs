@@ -49,7 +49,7 @@ namespace MockQueryable.FakeItEasy
 			A.CallTo(() => mock.Provider).Returns(queryProvider);
 			A.CallTo(() => mock.Expression).Returns(data?.Expression);
 			A.CallTo(() => mock.ElementType).Returns(data?.ElementType);
-			A.CallTo(() => mock.GetEnumerator()).Returns(data?.GetEnumerator());
+			A.CallTo(() => mock.GetEnumerator()).ReturnsLazily(() => data?.GetEnumerator());
 		}
 
 		private static void ConfigureAsyncEnumerableCalls<TEntity>(

@@ -45,7 +45,7 @@ namespace MockQueryable.NSubstitute
 			mock.Provider.Returns(queryProvider);
 			mock.Expression.Returns(data?.Expression);
 			mock.ElementType.Returns(data?.ElementType);
-			mock.GetEnumerator().Returns(data?.GetEnumerator());
+			mock.GetEnumerator().Returns(info => data?.GetEnumerator());
 		}
 
 		private static void ConfigureAsyncEnumerableCalls<TEntity>(
