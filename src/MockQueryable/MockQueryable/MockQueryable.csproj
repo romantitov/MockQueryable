@@ -3,20 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageId>MockQueryable.Core</PackageId>
-    <Authors>Roman Titov</Authors>
-    <Description>Async operations with generic collections, to provide for collections such List&lt;T&gt; execute EntityFrameworkCore operations such ToListAsync, FirstOrDefaultAsync etc.</Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>EntityFrameworkCore 3.0.0 supported</PackageReleaseNotes>
-    <PackageTags>Moq EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
-    <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.1</Version>
-    <AssemblyVersion>3.0.1.0</AssemblyVersion>
-    <FileVersion>3.0.1.0</FileVersion>
-    <Company></Company>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>logo.png</PackageIcon>
+		<Authors>Roman Titov</Authors>
+	  <Description>
+		  Extension for mocking Entity Framework Core operations such ToListAsync, FirstOrDefaultAsync etc. by Moq
+		  When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
+	  </Description>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+	  <PackageReleaseNotes>Allows mutation of base enumerable</PackageReleaseNotes>
+	  <PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
+	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Version>3.0.2</Version>
+	  <AssemblyVersion>3.0.2.0</AssemblyVersion>
+	  <FileVersion>3.0.2.0</FileVersion>
+	  <Company></Company>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
