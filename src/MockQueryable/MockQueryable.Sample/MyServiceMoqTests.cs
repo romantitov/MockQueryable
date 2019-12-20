@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MockQueryable.Moq;
 using Moq;
@@ -147,16 +148,24 @@ namespace MockQueryable.Sample
 
         }
 
-	    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
-	    public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
-	    {
-	        //arrange
-	        var mock = new List<UserEntity>().AsQueryable().BuildMockDbSet();
-	        var userRepository = new TestDbSetRepository(mock.Object);
-	        var service = new MyService(userRepository);
-	        //act
-	        await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
-	    }
+        [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
+        public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
+        {
+            //arrange
+            var userEntities = new List<UserEntity>();
+            var mock = userEntities.AsQueryable().BuildMockDbSet();
+            mock.Setup(set => set.AddAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
+                .Callback((UserEntity entity, CancellationToken _) => userEntities.Add(entity));
+            var userRepository = new TestDbSetRepository(mock.Object);
+            var service = new MyService(userRepository);
+            //act
+            await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
+            // assert
+            var entity = mock.Object.Single();
+            Assert.AreEqual(firstName, entity.FirstName);
+            Assert.AreEqual(lastName, entity.LastName);
+            Assert.AreEqual(dateOfBirth, entity.DateOfBirth);
+        }
 
         [TestCase("01/20/2012", "06/20/2018", 5)]
         [TestCase("01/20/2012", "06/20/2012", 4)]

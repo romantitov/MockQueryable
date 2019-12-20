@@ -147,11 +147,20 @@ namespace MockQueryable.Sample
         public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
         {
             //arrange
-            var mock = new List<UserEntity>().AsQueryable().BuildMockDbSet();
+            var userEntities = new List<UserEntity>();
+            var mock = userEntities.AsQueryable().BuildMockDbSet();
+            mock.AddAsync(Arg.Any<UserEntity>())
+                .Returns(info => null)
+                .AndDoes(info => userEntities.Add(info.Arg<UserEntity>()));
             var userRepository = new TestDbSetRepository(mock);
             var service = new MyService(userRepository);
             //act
             await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
+            // assert
+            var entity = mock.Single();
+            Assert.AreEqual(firstName, entity.FirstName);
+            Assert.AreEqual(lastName, entity.LastName);
+            Assert.AreEqual(dateOfBirth, entity.DateOfBirth);
         }
 
         [TestCase("01/20/2012", "06/20/2018", 5)]
