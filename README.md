@@ -9,6 +9,9 @@
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
 
 
+[![Build history](https://buildstats.info/appveyor/chart/handybudget/mockqueryable)](https://ci.appveyor.com/project/handybudget/mockqueryable/history)
+
+
 
 Extensions for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) (EFCore) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq), [NSubstitute](http://nsubstitute.github.io/) or [FakeItEasy](https://fakeiteasy.github.io/)
 When writing tests for your application it is often desirable to avoid hitting the database. The extensions allow you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
