@@ -24,6 +24,7 @@ namespace MockQueryable.Moq
 			var enumerable = new TestAsyncEnumerable<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+			mock.ConfigureDbSetCalls();
 			return mock;
 		}
 
@@ -36,6 +37,13 @@ namespace MockQueryable.Moq
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
 			return mock;
+		}
+
+		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock) 
+			where TEntity : class
+		{
+			mock.Setup(m => m.AsQueryable()).Returns(mock.Object);
+			mock.Setup(m => m.AsAsyncEnumerable()).Returns(mock.Object);
 		}
 
 		private static void ConfigureQueryableCalls<TEntity>(

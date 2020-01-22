@@ -191,6 +191,23 @@ namespace MockQueryable.Sample
             Assert.AreEqual(expectedCount, result.Count);
         }
 
-
-    }
+		[TestCase]
+		public void DbSetGetAllUserEntity() {
+			//arrange
+			var users = new List<UserEntity>
+			{
+				new UserEntity{FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
+				new UserEntity{FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
+				new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
+				new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012",UsCultureInfo.DateTimeFormat)},
+				new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
+			};
+			var mock = users.AsQueryable().BuildMockDbSet();
+			var userRepository = new TestDbSetRepository(mock.Object);
+			//act
+			var result = userRepository.GetAll();
+			//assert
+			Assert.AreEqual(users.Count, result.Count);
+		}
+	}
 }

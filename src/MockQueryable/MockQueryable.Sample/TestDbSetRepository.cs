@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,10 @@ namespace MockQueryable.Sample
         public async Task CreateUser(UserEntity user)
         {
             await _dbSet.AddAsync(user);
+        }
+
+        public List<UserEntity> GetAll() {
+            return _dbSet.AsQueryable().ToList();
         }
     }
 }
