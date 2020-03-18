@@ -1,19 +1,26 @@
 language: csharp
+mono: none
+sudo: required
+dist: xenial
+dotnet: 3.1.101
 
-dotnet: 2.1
 
-dist: trusty
+  
+ jobs:
+  include:
+    - stage: "Build & Test"
+      name: "Build & Test"
+      script:
+        - dotnet restore
+        - dotnet build -c Release --no-cache ./src/MockQueryable/MockQueryable.sln
+        - dotnet test -c Release --no-build ./src/MockQueryable/MockQueryable.sln
 
-solution: ./src/MockQueryable/MockQueryable.sln
+    - stage: "Code Coverage"
+      name: "Code Coverage"
+      install: dotnet tool install --global Codecov.Tool
+      script:
+        - dotnet test /p:CollectCoverage=true /p:CoverletOutput="../" /p:MergeWith="../coverage.json" /maxcpucount:1 /p:CoverletOutputFormat=\"json,opencover\"
+        - $HOME/.dotnet/tools/codecov -f ./test/coverage.opencover.xml -t $CODECOV_TOKEN --flag unittests
 
-script:
-
-  - cd src/MockQueryable
-
-  - dotnet restore
-
-  - dotnet build --configuration=Release
-
-  - dotnet test ./MockQueryable.Sample/MockQueryable.Sample.csproj
   
 
