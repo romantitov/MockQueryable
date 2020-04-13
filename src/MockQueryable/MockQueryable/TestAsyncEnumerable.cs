@@ -60,10 +60,9 @@ namespace MockQueryable
 		{
 			var expectedResultType = typeof(TResult).GetGenericArguments()[0];
 			var executionResult = typeof(IQueryProvider)
-				.GetMethod(
-					name: nameof(IQueryProvider.Execute),
-					genericParameterCount: 1,
-					types: new[] {typeof(Expression)})
+				.GetMethods()
+				.Where(method => method.Name == nameof(IQueryProvider.Execute) && method.IsGenericMethod)
+				.First()
 				.MakeGenericMethod(expectedResultType)
 				.Invoke(this, new[] {expression});
 
