@@ -21,6 +21,7 @@ namespace MockQueryable
 		public TestAsyncEnumerable(IEnumerable<T> enumerable)
 		{
 			_enumerable = enumerable;
+			Expression = enumerable.AsQueryable().Expression;
 		}
 
 		public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
