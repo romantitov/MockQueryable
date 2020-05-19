@@ -108,11 +108,18 @@ PM> Install-Package MockQueryable.FakeItEasy
 
 ### Can I use it with my favorite mock framework?
 
-You can install [MockQueryable.Core](https://www.nuget.org/packages/MockQueryable.Core/) from the package manager console:
+You can install [MockQueryable.EntityFrameworkCore](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/) from the package manager console:
 
+```
+PM> Install-Package MockQueryable.EntityFrameworkCore
+```
+[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.EntityFrameworkCore.svg)](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/)
+
+or even [MockQueryable.Core](https://www.nuget.org/packages/MockQueryable.Core/)
 ```
 PM> Install-Package MockQueryable.Core
 ```
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Core.svg)](https://www.nuget.org/packages/MockQueryable.Core/)
+
 
 Then [make own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework

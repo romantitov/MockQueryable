@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
+using MockQueryable.EntityFrameworkCore;
 using Moq;
 
 namespace MockQueryable.Moq
@@ -12,7 +13,7 @@ namespace MockQueryable.Moq
 		public static Mock<IQueryable<TEntity>> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
 			var mock = new Mock<IQueryable<TEntity>>();
-			var enumerable = new TestAsyncEnumerable<TEntity>(data);
+			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.ConfigureQueryableCalls(enumerable, data);
 			return mock;
@@ -21,7 +22,7 @@ namespace MockQueryable.Moq
 		public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
 			var mock = new Mock<DbSet<TEntity>>();
-			var enumerable = new TestAsyncEnumerable<TEntity>(data);
+			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
 			mock.ConfigureDbSetCalls();
@@ -33,7 +34,7 @@ namespace MockQueryable.Moq
 			where TEntity : class
 		{
 			var mock = new Mock<DbQuery<TEntity>>();
-			var enumerable = new TestAsyncEnumerable<TEntity>(data);
+			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
 			return mock;

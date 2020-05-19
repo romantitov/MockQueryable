@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MockQueryable
+namespace MockQueryable.EntityFrameworkCore
 {
 	public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 	{
