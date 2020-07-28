@@ -69,36 +69,10 @@ namespace MockQueryable.Sample
 
         }
 
+
         [TestCase("01/20/2012", "06/20/2018", 5)]
         [TestCase("01/20/2012", "06/20/2012", 4)]
         [TestCase("01/20/2012", "02/20/2012", 3)]
-        [TestCase("01/20/2010", "02/20/2011", 0)]
-        public async Task GetUserReports_DbQuery(DateTime from, DateTime to, int expectedCount)
-        {
-            //arrange
-            var userRepository = A.Fake<IUserRepository>();
-            var service = new MyService(userRepository);
-            var users = new List<UserEntity>
-            {
-                new UserEntity{FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
-            };
-            //expect
-            var mock = users.AsQueryable().BuildMockDbQuery();
-            A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
-            //act
-            var result = await service.GetUserReports(from, to);
-            //assert
-            Assert.AreEqual(expectedCount, result.Count);
-
-        }
-
-        //[TestCase("01/20/2012", "06/20/2018", 5)]
-        //[TestCase("01/20/2012", "06/20/2012", 4)]
-        //[TestCase("01/20/2012", "02/20/2012", 3)]
         [TestCase("01/20/2010", "02/20/2011", 0)]
         public async Task GetUserReports_AutoMap(DateTime from, DateTime to, int expectedCount)
         {

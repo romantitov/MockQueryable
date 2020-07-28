@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
 	  <PackageId>MockQueryable.Moq</PackageId>
     <Authors>Roman Titov</Authors>
 		<Description>
@@ -9,14 +9,14 @@
 			When writing tests for your application it is often desirable to avoid hitting the database. The extension allows you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
 		</Description>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-	  <PackageReleaseNotes>MockQueryable splitted into MockQueryable.Core and MockQueryable.EntityFrameworkCore</PackageReleaseNotes>
 		<PackageProjectUrl>https://github.com/romantitov/MockQueryable</PackageProjectUrl>
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <PackageTags>Mock EntityFrameworkCore Queryable mock EF EFCore UnitTests EntityFrameworkCore Moq</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.1.3</Version>
-    <AssemblyVersion>3.1.3.0</AssemblyVersion>
-    <FileVersion>3.1.3.0</FileVersion>
+	  <PackageReleaseNotes>Added support .Net 5.0</PackageReleaseNotes>
+	  <Version>5.0.0-preview.7</Version>
+	  <AssemblyVersion>5.0.0.0</AssemblyVersion>
+	  <FileVersion>5.0.0.0</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
