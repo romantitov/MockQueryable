@@ -8,7 +8,6 @@
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-    <PackageReference Include="MockQueryable.FakeItEasy" Version="5.0.0-preview.7" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
       <PrivateAssets>all</PrivateAssets>
@@ -17,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MockQueryable.FakeItEasy\MockQueryable.FakeItEasy.csproj" />
     <ProjectReference Include="..\MockQueryable.Moq\MockQueryable.Moq.csproj" />
     <ProjectReference Include="..\MockQueryable.NSubstitute\MockQueryable.NSubstitute.csproj" />
   </ItemGroup>
