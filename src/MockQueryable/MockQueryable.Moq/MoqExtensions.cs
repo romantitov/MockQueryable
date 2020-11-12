@@ -29,17 +29,6 @@ namespace MockQueryable.Moq
 			return mock;
 		}
 
-		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
-		public static Mock<DbQuery<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data)
-			where TEntity : class
-		{
-			var mock = new Mock<DbQuery<TEntity>>();
-			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
-			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
-			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
-			return mock;
-		}
-
 		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock) 
 			where TEntity : class
 		{
