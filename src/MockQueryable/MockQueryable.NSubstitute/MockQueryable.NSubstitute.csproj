@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 	  <PackageId>MockQueryable.NSubstitute</PackageId>
 		<Authors>Roman Titov</Authors>
 	  <Description>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NSubstitute" Version="4.2.1" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\logo.png">

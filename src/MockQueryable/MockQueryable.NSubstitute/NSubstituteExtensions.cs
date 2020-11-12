@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MockQueryable.EntityFrameworkCore;
+using NSubstitute;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.EntityFrameworkCore;
-using NSubstitute;
 
 namespace MockQueryable.NSubstitute
 {
-	public static class NSubstituteExtensions
+    public static class NSubstituteExtensions
 	{
 		public static IQueryable<TEntity> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
@@ -29,9 +29,9 @@ namespace MockQueryable.NSubstitute
 		}
 
 		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
-		public static DbQuery<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		public static DbSet<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
-			var mock = Substitute.For<DbQuery<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
+			var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.ConfigureAsyncEnumerableCalls(enumerable);
 			mock.ConfigureQueryableCalls(enumerable, data);

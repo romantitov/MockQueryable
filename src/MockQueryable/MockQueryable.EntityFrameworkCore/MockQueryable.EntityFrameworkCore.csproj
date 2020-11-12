@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 		<PackageId>MockQueryable.EntityFrameworkCore</PackageId>
 		<Authors>Roman Titov</Authors>
 		<Description>
@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
 	</ItemGroup>
 
   <ItemGroup>

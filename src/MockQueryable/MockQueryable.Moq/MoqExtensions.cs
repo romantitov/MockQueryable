@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MockQueryable.EntityFrameworkCore;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.EntityFrameworkCore;
-using Moq;
 
 namespace MockQueryable.Moq
 {
-	public static class MoqExtensions
+    public static class MoqExtensions
 	{
 		public static Mock<IQueryable<TEntity>> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
@@ -30,10 +30,10 @@ namespace MockQueryable.Moq
 		}
 
 		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
-		public static Mock<DbQuery<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data)
+		public static Mock<DbSet<TEntity>> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data)
 			where TEntity : class
 		{
-			var mock = new Mock<DbQuery<TEntity>>();
+			var mock = new Mock<DbSet<TEntity>>();
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.As<IAsyncEnumerable<TEntity>>().ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);

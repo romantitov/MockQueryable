@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 	  <PackageId>MockQueryable.Moq</PackageId>
     <Authors>Roman Titov</Authors>
 		<Description>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.8.0" />
+    <PackageReference Include="Moq" Version="4.15.1" />
   </ItemGroup>
 
   

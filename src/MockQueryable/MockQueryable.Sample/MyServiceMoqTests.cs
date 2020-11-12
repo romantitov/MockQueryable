@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MockQueryable.Moq;
+using Moq;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
-using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
-  [TestFixture]
+    [TestFixture]
   public class MyServiceMoqTests
   {
     private static readonly CultureInfo UsCultureInfo = new CultureInfo("en-US");
@@ -127,7 +127,7 @@ namespace MockQueryable.Sample
         }
       };
       //expect
-      var mock = users.AsQueryable().BuildMockDbQuery();
+      var mock = users.AsQueryable().BuildMockDbSet();
       userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
       //act
       var result = await service.GetUserReports(from, to);

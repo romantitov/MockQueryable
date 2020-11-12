@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MockQueryable.NSubstitute;
+using NSubstitute;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using MockQueryable.NSubstitute;
-using NSubstitute;
-using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
-	[TestFixture]
+    [TestFixture]
     public class MyServiceNSubstituteTests
     {
         private static readonly CultureInfo UsCultureInfo = new CultureInfo("en-US");
@@ -85,7 +85,7 @@ namespace MockQueryable.Sample
                 new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
             };
             //expect
-            var mock = users.AsQueryable().BuildMockDbQuery();
+            var mock = users.AsQueryable().BuildMockDbSet();
             userRepository.GetQueryable().Returns(mock);
             //act
             var result = await service.GetUserReports(from, to);

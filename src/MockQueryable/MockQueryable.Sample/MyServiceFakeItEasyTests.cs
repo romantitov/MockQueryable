@@ -1,12 +1,12 @@
-﻿using System;
+﻿using FakeItEasy;
+using MockQueryable.FakeItEasy;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FakeItEasy;
-using MockQueryable.FakeItEasy;
-using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
@@ -87,7 +87,7 @@ namespace MockQueryable.Sample
                 new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
             };
             //expect
-            var mock = users.AsQueryable().BuildMockDbQuery();
+            var mock = users.AsQueryable().BuildMockDbSet();
             A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
             //act
             var result = await service.GetUserReports(from, to);

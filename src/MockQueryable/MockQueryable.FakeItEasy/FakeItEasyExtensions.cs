@@ -1,14 +1,14 @@
-﻿using System;
+﻿using FakeItEasy;
+using Microsoft.EntityFrameworkCore;
+using MockQueryable.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using FakeItEasy;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.EntityFrameworkCore;
 
 namespace MockQueryable.FakeItEasy
 {
-	public static class FakeItEasyExtensions
+    public static class FakeItEasyExtensions
 	{
 		public static IQueryable<TEntity> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
@@ -32,9 +32,9 @@ namespace MockQueryable.FakeItEasy
 		}
 
 		[Obsolete("Use BuildMockDbSet<TEntity> instead")]
-		public static DbQuery<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		public static DbSet<TEntity> BuildMockDbQuery<TEntity>(this IQueryable<TEntity> data) where TEntity : class
 		{
-			var mock = A.Fake<DbQuery<TEntity>>(
+			var mock = A.Fake<DbSet<TEntity>>(
 				d => d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.ConfigureQueryableCalls(enumerable, data);
