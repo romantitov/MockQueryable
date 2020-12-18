@@ -1,5 +1,5 @@
 
-# MockQueryable
+# MockQueryable 
 
 [![Build status](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)](https://github.com/romantitov/MockQueryable/actions)
 [![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
