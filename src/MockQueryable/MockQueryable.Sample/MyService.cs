@@ -87,6 +87,8 @@ namespace MockQueryable.Sample
 		Task CreateUser(UserEntity user);
 
 		List<UserEntity> GetAll();
+		
+		IAsyncEnumerable<UserEntity> GetAllAsync();
 	}
 
 

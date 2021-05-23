@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace MockQueryable.Sample
 {
@@ -25,6 +25,11 @@ namespace MockQueryable.Sample
 
         public List<UserEntity> GetAll() {
             return _dbSet.AsQueryable().ToList();
+        }
+
+        public IAsyncEnumerable<UserEntity> GetAllAsync()
+        {
+            return _dbSet.AsAsyncEnumerable();
         }
     }
 }
