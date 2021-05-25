@@ -13,10 +13,10 @@
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <PackageTags>Mock EntityFrameworkCore Queryable mock EF EFCore UnitTests EntityFrameworkCore Moq</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes>Added support .Net 5.0</PackageReleaseNotes>
-	  <Version>5.0.0</Version>
-	  <AssemblyVersion>5.0.0.0</AssemblyVersion>
-	  <FileVersion>5.0.0.0</FileVersion>
+	  <PackageReleaseNotes>Fixed an issue with mocking result of IAsyncEnumerable from DbSet</PackageReleaseNotes>
+		<Version>5.0.1</Version>
+	  <AssemblyVersion>5.0.0.1</AssemblyVersion>
+	  <FileVersion>5.0.0.1</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
