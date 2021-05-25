@@ -133,7 +133,7 @@ namespace MockQueryable.Sample
         public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
         {
             //arrange
-            List<UserEntity> users = CreateUserList();
+            var users = CreateUserList();
 
             var mock = users.AsQueryable().BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mock);
@@ -148,13 +148,13 @@ namespace MockQueryable.Sample
         public async Task DbSetGetAllUserEntitiesAsync()
         {
             // arrange
-            List<UserEntity> users = CreateUserList();
+            var users = CreateUserList();
 
-            DbSet<UserEntity> mockDbSet = users.AsQueryable().BuildMockDbSet();
-            TestDbSetRepository userRepository = new TestDbSetRepository(mockDbSet);
+            var mockDbSet = users.AsQueryable().BuildMockDbSet();
+            var userRepository = new TestDbSetRepository(mockDbSet);
 
             // act
-            List<UserEntity> result = await userRepository.GetAllAsync().ToListAsync();
+            var result = await userRepository.GetAllAsync().ToListAsync();
 
             // assert
             Assert.AreEqual(users.Count, result.Count);
@@ -164,13 +164,13 @@ namespace MockQueryable.Sample
         public async Task DbSetGetOneUserTntityAsync()
         {
             // arrange
-            List<UserEntity> users = CreateUserList();
+            var users = CreateUserList();
 
-            DbSet<UserEntity> mockDbSet = users.AsQueryable().BuildMockDbSet();
-            TestDbSetRepository userRepository = new TestDbSetRepository(mockDbSet);
+            var mockDbSet = users.AsQueryable().BuildMockDbSet();
+            var userRepository = new TestDbSetRepository(mockDbSet);
 
             // act
-            UserEntity result = await userRepository.GetAllAsync()
+            var result = await userRepository.GetAllAsync()
                 .Where(user => user.FirstName == "FirstName1")
                 .FirstOrDefaultAsync();
 

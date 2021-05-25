@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.EntityFrameworkCore;
@@ -28,6 +28,7 @@ namespace MockQueryable.FakeItEasy
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.ConfigureQueryableCalls(enumerable, data);
 			mock.ConfigureAsyncEnumerableCalls(enumerable);
+      mock.ConfigureDbSetCalls(data);
 			return mock;
 		}
 
@@ -50,5 +51,23 @@ namespace MockQueryable.FakeItEasy
 			A.CallTo(() => mock.GetAsyncEnumerator(A<CancellationToken>.Ignored))
 				.Returns(enumerable.GetAsyncEnumerator());
 		}
+
+    private static void ConfigureDbSetCalls<TEntity>(this DbSet<TEntity> mock, IQueryable<TEntity> data)
+      where TEntity : class
+    {
+			A.CallTo(() => mock.AsQueryable()).Returns(data);
+			A.CallTo(() => mock.AsAsyncEnumerable()).ReturnsLazily(args => CreateAsyncMock(data));
+    }
+
+    private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)
+      where TEntity : class
+    {
+      foreach (var entity in data)
+      {
+        yield return entity;
+      }
+
+      await Task.CompletedTask;
+    }
 	}
 }
