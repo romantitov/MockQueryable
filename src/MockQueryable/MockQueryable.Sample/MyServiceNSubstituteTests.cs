@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using MockQueryable.NSubstitute;
+using NSubstitute;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using MockQueryable.NSubstitute;
-using NSubstitute;
-using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
-	[TestFixture]
+    [TestFixture]
     public class MyServiceNSubstituteTests
     {
         private static readonly CultureInfo UsCultureInfo = new CultureInfo("en-US");
@@ -50,16 +51,10 @@ namespace MockQueryable.Sample
             //arrange
 		    var userRepository = Substitute.For<IUserRepository>();
 		    var service = new MyService(userRepository);
-            var users = new List<UserEntity>
-			{
-				new UserEntity{FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-				new UserEntity{FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-				new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-				new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012",UsCultureInfo.DateTimeFormat)},
-				new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
-			};
-			//expect
-			var mock = users.AsQueryable().BuildMock();
+            List<UserEntity> users = CreateUserList();
+
+            //expect
+            var mock = users.AsQueryable().BuildMock();
 			userRepository.GetQueryable().Returns(mock);
 			//act
 			var result = await service.GetUserReports(from, to);
@@ -74,14 +69,8 @@ namespace MockQueryable.Sample
         public async Task GetUserReports_AutoMap(DateTime from, DateTime to, int expectedCount)
         {
             //arrange
-            var users = new List<UserEntity>
-            {
-                new UserEntity{FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
-            };
+            List<UserEntity> users = CreateUserList();
+
             var mock = users.AsQueryable().BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mock);
             var service = new MyService(userRepository);
@@ -144,14 +133,8 @@ namespace MockQueryable.Sample
         public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
         {
             //arrange
-            var users = new List<UserEntity>
-            {
-                new UserEntity{FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012",UsCultureInfo.DateTimeFormat)},
-                new UserEntity{FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018",UsCultureInfo.DateTimeFormat)},
-            };
+            List<UserEntity> users = CreateUserList();
+
             var mock = users.AsQueryable().BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mock);
             var service = new MyService(userRepository);
@@ -160,6 +143,49 @@ namespace MockQueryable.Sample
             //assert
             Assert.AreEqual(expectedCount, result.Count);
         }
+
+        [TestCase]
+        public async Task DbSetGetAllUserEntitiesAsync()
+        {
+            // arrange
+            List<UserEntity> users = CreateUserList();
+
+            DbSet<UserEntity> mockDbSet = users.AsQueryable().BuildMockDbSet();
+            TestDbSetRepository userRepository = new TestDbSetRepository(mockDbSet);
+
+            // act
+            List<UserEntity> result = await userRepository.GetAllAsync().ToListAsync();
+
+            // assert
+            Assert.AreEqual(users.Count, result.Count);
+        }
+
+        [TestCase]
+        public async Task DbSetGetOneUserTntityAsync()
+        {
+            // arrange
+            List<UserEntity> users = CreateUserList();
+
+            DbSet<UserEntity> mockDbSet = users.AsQueryable().BuildMockDbSet();
+            TestDbSetRepository userRepository = new TestDbSetRepository(mockDbSet);
+
+            // act
+            UserEntity result = await userRepository.GetAllAsync()
+                .Where(user => user.FirstName == "FirstName1")
+                .FirstOrDefaultAsync();
+
+            // assert
+            Assert.AreEqual(users.First(), result);
+        }
+
+        private static List<UserEntity> CreateUserList() => new List<UserEntity>
+        {
+            new UserEntity { FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+            new UserEntity { FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+            new UserEntity { FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+            new UserEntity { FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat) },
+            new UserEntity { FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat) },
+        };
 
     }
 }
