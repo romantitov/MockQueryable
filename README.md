@@ -81,6 +81,29 @@ _userRepository.GetQueryable().Returns(mock);
 //3 - setup the mock as Queryable for FakeItEasy
 A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
 ```
+### Can I extend the mock object created by MockQueryable with custom logic?
+MockQueryable creates for your tests a mock object based on in-memory data, but you can also add some custome logic to it.
+
+``` C#
+var userId = Guid.NewGuid();
+var users = new List<UserEntity>
+{
+    new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
+   //etc. 
+};
+var mock = users.AsQueryable().BuildMockDbSet();
+
+//Aditional setup for FindAsync
+mock.Setup(x => x.FindAsync(userId)).ReturnsAsync((object[] ids) =>
+{
+    var id = (Guid)ids[0];
+    return users.FirstOrDefault(x => x.Id == id);
+});
+var userRepository = new TestDbSetRepository(mock.Object);
+
+//Execution FindAsync
+var user = await ((DbSet<UserEntity>) userRepository.GetQueryable()).FindAsync(userId);
+```
 
 Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
 
