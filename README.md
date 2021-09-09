@@ -7,7 +7,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
-
+[![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
 [![Build history](https://buildstats.info/appveyor/chart/handybudget/mockqueryable)](https://ci.appveyor.com/project/handybudget/mockqueryable/history)
 
