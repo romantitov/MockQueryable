@@ -7,7 +7,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
-
+[![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
 [![Build history](https://buildstats.info/appveyor/chart/handybudget/mockqueryable)](https://ci.appveyor.com/project/handybudget/mockqueryable/history)
 
@@ -81,6 +81,29 @@ _userRepository.GetQueryable().Returns(mock);
 //3 - setup the mock as Queryable for FakeItEasy
 A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
 ```
+### Can I extend the mock object created by MockQueryable with custom logic?
+MockQueryable creates for your tests a mock object based on in-memory data, but you can also add some custome logic to it.
+
+``` C#
+var userId = Guid.NewGuid();
+var users = new List<UserEntity>
+{
+    new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
+   //etc. 
+};
+var mock = users.AsQueryable().BuildMockDbSet();
+
+//Aditional setup for FindAsync
+mock.Setup(x => x.FindAsync(userId)).ReturnsAsync((object[] ids) =>
+{
+    var id = (Guid)ids[0];
+    return users.FirstOrDefault(x => x.Id == id);
+});
+var userRepository = new TestDbSetRepository(mock.Object);
+
+//Execution FindAsync
+var user = await ((DbSet<UserEntity>) userRepository.GetQueryable()).FindAsync(userId);
+```
 
 Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
 
@@ -122,4 +145,4 @@ PM> Install-Package MockQueryable.Core
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Core.svg)](https://www.nuget.org/packages/MockQueryable.Core/)
 
 
-Then [make own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework
+Then [make your own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework
