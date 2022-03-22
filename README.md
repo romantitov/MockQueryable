@@ -32,6 +32,8 @@ and you want to cover it by unit tests
 
 ### How do I get started?
 
+Just want to provide async queryable data for use with EF Core?
+
 ```csharp
 //1 - create a List<T> with test items
 var users = new List<UserEntity>()
@@ -40,6 +42,22 @@ var users = new List<UserEntity>()
   ...
 };
 
+//2 - build mock by extension
+var mock = users.AsTestAsyncQueryable();
+
+//3 - setup the mock as Queryable for Moq
+_userRepository.Setup(x => x.GetQueryable()).Returns(mock);
+
+//3 - setup the mock as Queryable for NSubstitute
+_userRepository.GetQueryable().Returns(mock);
+
+//3 - setup the mock as Queryable for FakeItEasy
+A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
+```
+
+Want control over mock behavior?
+
+```csharp
 //2 - build mock by extension
 var mock = users.AsQueryable().BuildMock();
 
