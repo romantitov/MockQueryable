@@ -41,10 +41,10 @@ var users = new List<UserEntity>()
 };
 
 //2 - build mock by extension
-var mock = users.AsQueryable().BuildMock();
+var mock = users.BuildMock();
 
 //3 - setup the mock as Queryable for Moq
-_userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
+_userRepository.Setup(x => x.GetQueryable()).Returns(mock);
 
 //3 - setup the mock as Queryable for NSubstitute
 _userRepository.GetQueryable().Returns(mock);
@@ -64,19 +64,6 @@ var userRepository = new TestDbSetRepository(mock.Object);
 
 //3 - setup DbSet for NSubstitute or FakeItEasy
 var userRepository = new TestDbSetRepository(mock);
-```
-
-Do you use *DbQuery*? 
-
-```csharp
-//2 - build mock by extension
-var mock = users.AsQueryable().BuildMockDbQuery();
-
-//3 - setup the mock as Queryable for Moq
-_userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
-
-//3 - setup the mock as Queryable for NSubstitute
-_userRepository.GetQueryable().Returns(mock);
 
 //3 - setup the mock as Queryable for FakeItEasy
 A.CallTo(() => userRepository.GetQueryable()).Returns(mock);

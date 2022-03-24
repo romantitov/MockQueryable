@@ -33,8 +33,8 @@ namespace MockQueryable.Sample
         new UserEntity {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)}
       };
       //expect
-      var mock = users.AsQueryable().BuildMock();
-      userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
+      var mock = users.BuildMock();
+      userRepository.Setup(x => x.GetQueryable()).Returns(mock);
       //act
       var ex = Assert.ThrowsAsync<ApplicationException>(() =>
         service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
@@ -53,8 +53,8 @@ namespace MockQueryable.Sample
       var service = new MyService(userRepository.Object);
       var users = CreateUserList();
       //expect
-      var mock = users.AsQueryable().BuildMock();
-      userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
+      var mock = users.BuildMock();
+      userRepository.Setup(x => x.GetQueryable()).Returns(mock);
       //act
       var result = await service.GetUserReports(from, to);
       //assert
@@ -74,8 +74,8 @@ namespace MockQueryable.Sample
       var service = new MyService(userRepository.Object);
       var users = CreateUserList();
       //expect
-      var mock = users.AsQueryable().BuildMock();
-      userRepository.Setup(x => x.GetQueryable()).Returns(mock.Object);
+      var mock = users.BuildMock();
+      userRepository.Setup(x => x.GetQueryable()).Returns(mock);
       //act
       var result = await service.GetUserReportsAutoMap(from, to);
       //assert

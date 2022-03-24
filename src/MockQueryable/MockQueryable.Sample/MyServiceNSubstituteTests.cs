@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MockQueryable.NSubstitute;
+﻿using MockQueryable.NSubstitute;
 using NSubstitute;
 using NUnit.Framework;
 using System;
@@ -33,7 +32,7 @@ namespace MockQueryable.Sample
 				new UserEntity{DateOfBirth = DateTime.Parse("01/20/2012",UsCultureInfo.DateTimeFormat)},
 			};
 			//expect
-			var mock = users.AsQueryable().BuildMock();
+			var mock = users.BuildMock();
 			userRepository.GetQueryable().Returns(mock);
 			//act
 			var ex= Assert.ThrowsAsync<ApplicationException>(() => service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
@@ -54,7 +53,7 @@ namespace MockQueryable.Sample
             List<UserEntity> users = CreateUserList();
 
             //expect
-            var mock = users.AsQueryable().BuildMock();
+            var mock = users.BuildMock();
 			userRepository.GetQueryable().Returns(mock);
 			//act
 			var result = await service.GetUserReports(from, to);

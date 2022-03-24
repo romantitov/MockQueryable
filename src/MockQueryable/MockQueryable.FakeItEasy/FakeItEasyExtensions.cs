@@ -10,15 +10,9 @@ namespace MockQueryable.FakeItEasy
 {
 	public static class FakeItEasyExtensions
 	{
-		public static IQueryable<TEntity> BuildMock<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+		public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
 		{
-			var mock = A.Fake<IQueryable<TEntity>>(
-				d => d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
-			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
-			((IAsyncEnumerable<TEntity>) mock).ConfigureAsyncEnumerableCalls(enumerable);
-			mock.ConfigureQueryableCalls(enumerable, data);
-
-			return mock;
+            return new TestAsyncEnumerableEfCore<TEntity>(data);
 		}
 
 		public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
