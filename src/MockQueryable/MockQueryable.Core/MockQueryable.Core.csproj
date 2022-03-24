@@ -13,10 +13,10 @@
 	  <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
 	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes> Used TestAsyncEnumerableEfCore directly to improve performance (issue #55). Special thanks @natehitze Nate Hitze for the contribution.</PackageReleaseNotes>
-	  <Version>5.0.2</Version>
-	  <AssemblyVersion>5.0.0.2</AssemblyVersion>
-	  <FileVersion>5.0.0.2</FileVersion>
+	  <PackageReleaseNotes> .Net 6 supported</PackageReleaseNotes>
+	  <Version>6.0.0</Version>
+	  <AssemblyVersion>6.0.0.0</AssemblyVersion>
+	  <FileVersion>6.0.0.0</FileVersion>
 	  <Company></Company>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageIcon>logo.png</PackageIcon>

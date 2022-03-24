@@ -40,8 +40,8 @@ namespace MockQueryable.NSubstitute
     }
 
     private static void ConfigureAsyncEnumerableCalls<TEntity>(
-      this IAsyncEnumerable<TEntity> mock,
-      IAsyncEnumerable<TEntity> enumerable)
+      this DbSet<TEntity> mock,
+      IAsyncEnumerable<TEntity> enumerable) where TEntity : class
     {
       mock.GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
     }
