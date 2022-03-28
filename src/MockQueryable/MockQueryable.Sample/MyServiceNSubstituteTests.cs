@@ -143,6 +143,20 @@ namespace MockQueryable.Sample
             Assert.AreEqual(expectedCount, result.Count);
         }
 
+
+        [TestCase]
+        public async Task DbSetGetAllUserEntity()
+        {
+            //arrange
+            var users = CreateUserList();
+            var mock = users.AsQueryable().BuildMockDbSet();
+            var userRepository = new TestDbSetRepository(mock);
+            //act
+            var result = await userRepository.GetAll();
+            //assert
+            Assert.AreEqual(users.Count, result.Count);
+        }
+
         [TestCase]
         public async Task DbSetGetAllUserEntitiesAsync()
         {

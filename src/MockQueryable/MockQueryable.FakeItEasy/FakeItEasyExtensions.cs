@@ -22,6 +22,10 @@ namespace MockQueryable.FakeItEasy
             mock.ConfigureQueryableCalls(enumerable, data);
             mock.ConfigureAsyncEnumerableCalls(enumerable);
             mock.ConfigureDbSetCalls(data);
+            if (mock is IAsyncEnumerable<TEntity> asyncEnumerable)
+            {
+                A.CallTo(() => asyncEnumerable.GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
+            }
             return mock;
         }
 
@@ -43,6 +47,7 @@ namespace MockQueryable.FakeItEasy
         {
             A.CallTo(() => mock.GetAsyncEnumerator(A<CancellationToken>.Ignored))
                 .Returns(enumerable.GetAsyncEnumerator());
+           
         }
 
         private static void ConfigureDbSetCalls<TEntity>(this DbSet<TEntity> mock, IQueryable<TEntity> data)

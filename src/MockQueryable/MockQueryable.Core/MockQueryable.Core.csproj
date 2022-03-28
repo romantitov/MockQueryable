@@ -13,10 +13,10 @@
 	  <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
 	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes> .Net 6 supported</PackageReleaseNotes>
-	  <Version>6.0.0</Version>
-	  <AssemblyVersion>6.0.0.0</AssemblyVersion>
-	  <FileVersion>6.0.0.0</FileVersion>
+	  <PackageReleaseNotes> Fixed issue #58 ToListAsync() returns empty list after package update to 6.0.0 </PackageReleaseNotes>
+	  <Version>6.0.1</Version>
+	  <AssemblyVersion>6.0.0.1</AssemblyVersion>
+	  <FileVersion>6.0.0.1</FileVersion>
 	  <Company></Company>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageIcon>logo.png</PackageIcon>

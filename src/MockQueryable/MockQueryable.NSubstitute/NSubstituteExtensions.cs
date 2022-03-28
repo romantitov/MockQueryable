@@ -24,6 +24,11 @@ namespace MockQueryable.NSubstitute
       mock.ConfigureQueryableCalls(enumerable, data);
       mock.ConfigureDbSetCalls(data);
 
+      if (mock is IAsyncEnumerable<TEntity> asyncEnumerable)
+      {
+          asyncEnumerable.GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
+      }
+
       return mock;
     }
 

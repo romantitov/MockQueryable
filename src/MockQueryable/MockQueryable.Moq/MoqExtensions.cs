@@ -21,6 +21,9 @@ namespace MockQueryable.Moq
 			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 			mock.ConfigureAsyncEnumerableCalls(enumerable);
 			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+            mock.As<IAsyncEnumerable<TEntity>>().Setup(x => x.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(enumerable.GetAsyncEnumerator());
+			mock.Setup(m => m.AsQueryable()).Returns(enumerable);
+
 			mock.ConfigureDbSetCalls(data);
 			return mock;
 		}
@@ -41,6 +44,7 @@ namespace MockQueryable.Moq
 			mock.Setup(m => m.Expression).Returns(data?.Expression);
 			mock.Setup(m => m.ElementType).Returns(data?.ElementType);
 			mock.Setup(m => m.GetEnumerator()).Returns(() => data?.GetEnumerator());
+
 		}
 
 		private static void ConfigureAsyncEnumerableCalls<TEntity>(
@@ -49,6 +53,7 @@ namespace MockQueryable.Moq
 		{
 			mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
 				.Returns(() => enumerable.GetAsyncEnumerator());
+            
 		}
 
         private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)

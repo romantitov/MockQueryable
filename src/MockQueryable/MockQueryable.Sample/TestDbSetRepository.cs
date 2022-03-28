@@ -23,8 +23,8 @@ namespace MockQueryable.Sample
             await _dbSet.AddAsync(user);
         }
 
-        public List<UserEntity> GetAll() {
-            return _dbSet.AsQueryable().ToList();
+        public async Task<List<UserEntity>> GetAll() {
+            return await _dbSet.ToListAsync();
         }
 
         public IAsyncEnumerable<UserEntity> GetAllAsync()
