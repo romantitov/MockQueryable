@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
@@ -113,9 +116,10 @@ namespace MockQueryable.Sample
       //arrange
       var userEntities = new List<UserEntity>();
       var mock = userEntities.AsQueryable().BuildMockDbSet();
+
       mock.Setup(set => set.AddAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
-        .Callback((UserEntity entity, CancellationToken _) => userEntities.Add(entity));
-      var userRepository = new TestDbSetRepository(mock.Object);
+          .Callback((UserEntity entity, CancellationToken _) => userEntities.Add(entity));
+            var userRepository = new TestDbSetRepository(mock.Object);
       var service = new MyService(userRepository);
       //act
       await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
