@@ -3,7 +3,6 @@
 
 [![Build status](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)](https://github.com/romantitov/MockQueryable/actions)
 [![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
-[![Build Status](https://travis-ci.org/romantitov/MockQueryable.svg?branch=master)](https://travis-ci.org/romantitov/MockQueryable)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
 [![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
