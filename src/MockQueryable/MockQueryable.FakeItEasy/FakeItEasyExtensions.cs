@@ -10,7 +10,7 @@ namespace MockQueryable.FakeItEasy
 {
     public static class FakeItEasyExtensions
     {
-        public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
+        public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data)
         {
             return new TestAsyncEnumerableEfCore<TEntity>(data);
         }

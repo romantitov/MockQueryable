@@ -10,7 +10,7 @@ namespace MockQueryable.Moq
 {
 	public static class MoqExtensions
 	{
-		public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
+		public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data)
 		{
             return new TestAsyncEnumerableEfCore<TEntity>(data);
 		}
