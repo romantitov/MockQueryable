@@ -233,18 +233,17 @@ namespace MockQueryable.Sample
     
     
     [TestCase]
-    public async Task DbSetGetAllUserEntitiesAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
+    public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
       // arrange
       var users = new List<UserEntity>();
 
       var mockDbSet = users.AsQueryable().BuildMockDbSet();
-      var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
       // act
-      var result1 = await userRepository.GetAllAsync().ToListAsync();
+      var result1 = await mockDbSet.Object.ToListAsync();
       users.AddRange(CreateUserList());
-      var result2 = await userRepository.GetAllAsync().ToListAsync();
+      var result2 = await mockDbSet.Object.ToListAsync();
 
       // assert
       Assert.AreEqual(0, result1.Count);

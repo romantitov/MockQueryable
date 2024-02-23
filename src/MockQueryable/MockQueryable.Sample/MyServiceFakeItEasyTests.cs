@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
+using Microsoft.EntityFrameworkCore;
 using MockQueryable.FakeItEasy;
 using NUnit.Framework;
 
@@ -166,18 +167,17 @@ namespace MockQueryable.Sample
     }
 
     [TestCase]
-    public async Task DbSetGetAllUserEntitiesAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
+    public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
       // arrange
       var users = new List<UserEntity>();
 
       var mockDbSet = users.AsQueryable().BuildMockDbSet();
-      var userRepository = new TestDbSetRepository(mockDbSet);
-
+      
       // act
-      var result1 = await userRepository.GetAllAsync().ToListAsync();
+      var result1 = await mockDbSet.ToListAsync();
       users.AddRange(CreateUserList());
-      var result2 = await userRepository.GetAllAsync().ToListAsync();
+      var result2 = await mockDbSet.ToListAsync();
 
       // assert
       Assert.AreEqual(0, result1.Count);
