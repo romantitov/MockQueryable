@@ -230,6 +230,28 @@ namespace MockQueryable.Sample
       // assert
       Assert.AreEqual(users.Count, result.Count);
     }
+    
+    
+    [TestCase]
+    public async Task DbSetGetAllUserEntitiesAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
+    {
+      // arrange
+      var users = new List<UserEntity>();
+
+      var mockDbSet = users.AsQueryable().BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+      // act
+      var result1 = await userRepository.GetAllAsync().ToListAsync();
+      users.AddRange(CreateUserList());
+      var result2 = await userRepository.GetAllAsync().ToListAsync();
+
+      // assert
+      Assert.AreEqual(0, result1.Count);
+      Assert.AreEqual(users.Count, result2.Count);
+    }
+
+
 
     private static List<UserEntity> CreateUserList() => new List<UserEntity>
     {
