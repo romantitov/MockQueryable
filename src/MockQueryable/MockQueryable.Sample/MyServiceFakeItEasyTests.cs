@@ -109,7 +109,32 @@ namespace MockQueryable.Sample
 
     }
 
-    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
+    [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
+    [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
+    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012", "User already exist")]
+    public void DbSetCreatedFromCollectionCreateUserIfNotExist(string firstName, string lastName, DateTime dateOfBirth, string expectedError)
+    {
+        //arrange
+        var users = new List<UserEntity>
+        {
+            new UserEntity {LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
+            new UserEntity {FirstName = "ExistFirstName"},
+            new UserEntity {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
+            new UserEntity {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
+            new UserEntity {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
+        };
+        var mock = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mock);
+        var service = new MyService(userRepository);
+        //act
+        var ex = Assert.ThrowsAsync<ApplicationException>(() =>
+                                                              service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
+        //assert
+        Assert.AreEqual(expectedError, ex.Message);
+
+    }
+
+        [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
     public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
     {
       //arrange
@@ -132,7 +157,30 @@ namespace MockQueryable.Sample
       Assert.AreEqual(dateOfBirth, entity.DateOfBirth);
     }
 
-    [TestCase("01/20/2012", "06/20/2018", 5)]
+    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
+    public async Task DbSetCreatedFromCollectionCreateUser1(string firstName, string lastName, DateTime dateOfBirth)
+    {
+        //arrange
+        var userEntities = new List<UserEntity>();
+        var mock = userEntities.BuildMockDbSet();
+        A.CallTo(() => mock.AddAsync(A<UserEntity>._, A<CancellationToken>._))
+         .ReturnsLazily(call =>
+         {
+             userEntities.Add((UserEntity)call.Arguments[0]);
+             return default;
+         });
+        var userRepository = new TestDbSetRepository(mock);
+        var service = new MyService(userRepository);
+        //act
+        await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
+        // assert
+        var entity = mock.Single();
+        Assert.AreEqual(firstName, entity.FirstName);
+        Assert.AreEqual(lastName, entity.LastName);
+        Assert.AreEqual(dateOfBirth, entity.DateOfBirth);
+    }
+
+        [TestCase("01/20/2012", "06/20/2018", 5)]
     [TestCase("01/20/2012", "06/20/2012", 4)]
     [TestCase("01/20/2012", "02/20/2012", 3)]
     [TestCase("01/20/2010", "02/20/2011", 0)]
@@ -149,7 +197,24 @@ namespace MockQueryable.Sample
       Assert.AreEqual(expectedCount, result.Count);
     }
 
-    [TestCase]
+    [TestCase("01/20/2012", "06/20/2018", 5)]
+    [TestCase("01/20/2012", "06/20/2012", 4)]
+    [TestCase("01/20/2012", "02/20/2012", 3)]
+    [TestCase("01/20/2010", "02/20/2011", 0)]
+    public async Task DbSetCreatedFromCollectionGetUserReports(DateTime from, DateTime to, int expectedCount)
+    {
+        //arrange
+        var users = CreateUserList();
+        var mock = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mock);
+        var service = new MyService(userRepository);
+        //act
+        var result = await service.GetUserReports(from, to);
+        //assert
+        Assert.AreEqual(expectedCount, result.Count);
+    }
+
+        [TestCase]
     public async Task DbSetGetAllUserEntitiesAsync()
     {
       // arrange
@@ -166,6 +231,22 @@ namespace MockQueryable.Sample
     }
 
     [TestCase]
+    public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
+    {
+        // arrange
+        var users = CreateUserList();
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        // act
+        var result = await userRepository.GetAllAsync().ToListAsync();
+
+        // assert
+        Assert.AreEqual(users.Count, result.Count);
+    }
+
+        [TestCase]
     public async Task DbSetGetAllUserEntity()
     {
         //arrange
@@ -178,7 +259,20 @@ namespace MockQueryable.Sample
         Assert.AreEqual(users.Count, result.Count);
     }
 
-    private static List<UserEntity> CreateUserList() => new List<UserEntity>
+    [TestCase]
+    public async Task DbSetCreatedFromCollectionGetAllUserEntity()
+    {
+        //arrange
+        var users = CreateUserList();
+        var mock = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mock);
+        //act
+        var result = await userRepository.GetAll();
+        //assert
+        Assert.AreEqual(users.Count, result.Count);
+    }
+
+        private static List<UserEntity> CreateUserList() => new List<UserEntity>
     {
       new UserEntity
       {

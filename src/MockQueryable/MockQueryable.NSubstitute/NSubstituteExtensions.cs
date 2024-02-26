@@ -15,6 +15,8 @@ namespace MockQueryable.NSubstitute
         return new TestAsyncEnumerableEfCore<TEntity>(data);
     }
 
+    public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IEnumerable<TEntity> data) where TEntity : class => data.BuildMock().BuildMockDbSet();
+
     public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
     {
       var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
