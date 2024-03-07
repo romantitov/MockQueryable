@@ -13,12 +13,16 @@
     <RepositoryUrl>https://github.com/romantitov/MockQueryable</RepositoryUrl>
     <PackageTags>Mock EntityFrameworkCore Queryable mock EF EFCore UnitTests EntityFrameworkCore Moq</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	  <PackageReleaseNotes>Supported EntityFrameworkCore 7.0.0 </PackageReleaseNotes>
-	  <Version>7.0.0</Version>
-	  <AssemblyVersion>7.0.0.0</AssemblyVersion>
-	  <FileVersion>7.0.0.0</FileVersion>
+	  <PackageReleaseNotes>
+		  #74 Fix ToListAsync() for mocked DbSet by using lazy-creation of AsyncEnumerator - Thanks @fischero19
+		  #75 Added method for build DbSet from IEnumerable. - Thanks @sq735
+	  </PackageReleaseNotes>
+	  <Version>7.0.1</Version>
+	  <AssemblyVersion>7.0.0.1</AssemblyVersion>
+	  <FileVersion>7.0.0.1</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
@@ -38,6 +42,12 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+  	<None Include="..\..\..\README.md">
+  		<Pack>True</Pack>
+  		<PackagePath></PackagePath>
+  	</None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MockQueryable.EntityFrameworkCore\MockQueryable.EntityFrameworkCore.csproj" />
