@@ -24,7 +24,7 @@ namespace MockQueryable.FakeItEasy
             mock.ConfigureDbSetCalls(data);
             if (mock is IAsyncEnumerable<TEntity> asyncEnumerable)
             {
-                A.CallTo(() => asyncEnumerable.GetAsyncEnumerator(A<CancellationToken>.Ignored)).Returns(enumerable.GetAsyncEnumerator());
+                A.CallTo(() => asyncEnumerable.GetAsyncEnumerator(A<CancellationToken>.Ignored)).ReturnsLazily(() => enumerable.GetAsyncEnumerator());
             }
             return mock;
         }
