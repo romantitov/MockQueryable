@@ -1,4 +1,5 @@
-﻿using MockQueryable.NSubstitute;
+﻿using MockQueryable.EntityFrameworkCore;
+using MockQueryable.NSubstitute;
 using NSubstitute;
 using NUnit.Framework;
 using System;

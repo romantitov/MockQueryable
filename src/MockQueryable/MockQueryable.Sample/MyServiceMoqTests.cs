@@ -5,16 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
+using MockQueryable.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 
 namespace MockQueryable.Sample
 {
-  [TestFixture]
+    [TestFixture]
   public class MyServiceMoqTests
   {
     private static readonly CultureInfo UsCultureInfo = new CultureInfo("en-US");

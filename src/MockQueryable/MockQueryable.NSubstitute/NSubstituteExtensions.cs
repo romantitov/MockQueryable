@@ -10,11 +10,6 @@ namespace MockQueryable.NSubstitute
 {
   public static class NSubstituteExtensions
   {
-    public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
-    {
-        return new TestAsyncEnumerableEfCore<TEntity>(data);
-    }
-
     public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IEnumerable<TEntity> data) where TEntity : class => data.BuildMock().BuildMockDbSet();
 
     public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class

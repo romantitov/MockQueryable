@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.EntityFrameworkCore;
+using MockQueryable.EntityFrameworkCore;
 using MockQueryable.FakeItEasy;
 using NUnit.Framework;
 
