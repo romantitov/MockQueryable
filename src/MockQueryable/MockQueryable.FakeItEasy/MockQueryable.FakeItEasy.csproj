@@ -14,11 +14,11 @@
     <PackageTags>Mock EntityFrameworkCore Queryable mock EF EFCore UnitTests FakeItEasy</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageReleaseNotes>
-		  #77 BuildMock moved to MockQueryable.EntityFrameworkCore - Thanks @skarllot
+		  #80  Altered namespace for extension method to revert a breaking change - Thanks @StevePy
 	  </PackageReleaseNotes>
-	  <Version>7.0.2</Version>
-	  <AssemblyVersion>7.0.0.2</AssemblyVersion>
-	  <FileVersion>7.0.0.2</FileVersion>
+	  <Version>7.0.3</Version>
+	  <AssemblyVersion>7.0.0.3</AssemblyVersion>
+	  <FileVersion>7.0.0.3</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
