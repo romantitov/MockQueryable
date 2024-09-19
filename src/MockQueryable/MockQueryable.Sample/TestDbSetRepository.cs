@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +31,18 @@ namespace MockQueryable.Sample
         public IAsyncEnumerable<UserEntity> GetAllAsync()
         {
             return _dbSet.AsAsyncEnumerable();
+        }
+
+        public async Task<int> DeleteUserAsync(Guid id)
+        {
+            return await _dbSet.Where(x => x.Id == id)
+                .ExecuteDeleteAsync();
+        }
+
+        public async Task<int> UpdateFirstNameByIdAsync(Guid id, string firstName)
+        {
+            return await _dbSet.Where(x => x.Id == id)
+                .ExecuteUpdateAsync(opt => opt.SetProperty(x => x.FirstName, firstName));
         }
     }
 }
