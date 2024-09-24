@@ -135,7 +135,7 @@ namespace MockQueryable.Sample
 
     }
 
-        [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
+    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
     public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
     {
       //arrange
@@ -181,7 +181,7 @@ namespace MockQueryable.Sample
         Assert.AreEqual(dateOfBirth, entity.DateOfBirth);
     }
 
-        [TestCase("01/20/2012", "06/20/2018", 5)]
+    [TestCase("01/20/2012", "06/20/2018", 5)]
     [TestCase("01/20/2012", "06/20/2012", 4)]
     [TestCase("01/20/2012", "02/20/2012", 3)]
     [TestCase("01/20/2010", "02/20/2011", 0)]
@@ -215,7 +215,7 @@ namespace MockQueryable.Sample
         Assert.AreEqual(expectedCount, result.Count);
     }
 
-        [TestCase]
+    [Test]
     public async Task DbSetGetAllUserEntitiesAsync()
     {
       // arrange
@@ -231,7 +231,7 @@ namespace MockQueryable.Sample
       Assert.AreEqual(users.Count, result.Count);
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
     {
         // arrange
@@ -247,7 +247,7 @@ namespace MockQueryable.Sample
         Assert.AreEqual(users.Count, result.Count);
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
       // arrange
@@ -265,7 +265,7 @@ namespace MockQueryable.Sample
       Assert.AreEqual(users.Count, result2.Count);
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetGetAllUserEntity()
     {
         //arrange
@@ -278,7 +278,7 @@ namespace MockQueryable.Sample
         Assert.AreEqual(users.Count, result.Count);
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetCreatedFromCollectionGetAllUserEntity()
     {
         //arrange
@@ -291,33 +291,83 @@ namespace MockQueryable.Sample
         Assert.AreEqual(users.Count, result.Count);
     }
 
-        private static List<UserEntity> CreateUserList() => new List<UserEntity>
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteDeleteAsync()
     {
-      new UserEntity
-      {
-        FirstName = "FirstName1", LastName = "LastName",
-        DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-      },
-      new UserEntity
-      {
-        FirstName = "FirstName2", LastName = "LastName",
-        DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-      },
-      new UserEntity
-      {
-        FirstName = "FirstName3", LastName = "LastName",
-        DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-      },
-      new UserEntity
-      {
-        FirstName = "FirstName3", LastName = "LastName",
-        DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat)
-      },
-      new UserEntity
-      {
-        FirstName = "FirstName5", LastName = "LastName",
-        DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat)
-      },
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        // act
+        var count = await userRepository.DeleteUserAsync(userId);
+
+        // assert
+        Assert.AreEqual(1, count);
+
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteDeleteAsync_ShouldReturnZero()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        //act
+        var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
+
+        // assert
+        Assert.AreEqual(0, count);
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+            
+        //act
+        var count = await userRepository.UpdateFirstNameByIdAsync(userId, "Unit Test");
+
+        //assert
+        Assert.AreEqual(1, count);
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync_ShouldReturnZero()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        //act
+        var count = await userRepository.UpdateFirstNameByIdAsync(Guid.NewGuid(), "Unit Test");
+
+        //assert
+        Assert.AreEqual(0, count);
+    }
+
+    private static List<UserEntity> CreateUserList(Guid? userId = null) => new List<UserEntity>
+    {
+        new UserEntity { Id = userId ?? Guid.NewGuid(), FirstName = "FirstName1", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+        new UserEntity { Id = Guid.NewGuid(), FirstName = "FirstName2", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+        new UserEntity { Id = Guid.NewGuid(), FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat) },
+        new UserEntity { Id = Guid.NewGuid(), FirstName = "FirstName3", LastName = "LastName", DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat) },
+        new UserEntity { Id = Guid.NewGuid(), FirstName = "FirstName5", LastName = "LastName", DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat) },
     };
 
 

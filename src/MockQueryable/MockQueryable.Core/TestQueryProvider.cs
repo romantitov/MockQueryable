@@ -8,9 +8,6 @@ namespace MockQueryable.Core
 {
     public abstract class TestQueryProvider<T> : IOrderedQueryable<T>, IQueryProvider
     {
-        // Hardcoding this constants to avoid the reference to EFCore
-        private const string EF_EXECUTE_UPDATE_METHOD_NAME = "ExecuteUpdate";
-        private const string EF_EXECUTE_DELETE_METHOD_NAME = "ExecuteDelete";
 
         private IEnumerable<T> _enumerable;
 
@@ -53,18 +50,9 @@ namespace MockQueryable.Core
             return CompileExpressionItem<object>(expression);
         }
 
-        public TResult Execute<TResult>(Expression expression)
+        public virtual TResult Execute<TResult>(Expression expression)
         {
-            if (expression is MethodCallExpression methodCall && (methodCall.Method.Name == EF_EXECUTE_UPDATE_METHOD_NAME || methodCall.Method.Name == EF_EXECUTE_DELETE_METHOD_NAME)
-                && typeof(TResult) == typeof(int))
-            {
-                // Intercept ExecuteDelete and ExecuteUpdate calls
-                var affectedItems = CompileExpressionItem<IEnumerable<T>>(Expression).ToList();
-                // Return the count of affected items
-                return (TResult)(object)affectedItems.Count;
-            }
 
-            // Fall back to default expression execution
             return CompileExpressionItem<TResult>(expression);
         }
 
@@ -86,7 +74,7 @@ namespace MockQueryable.Core
 
         public IQueryProvider Provider => this;
 
-        private static TResult CompileExpressionItem<TResult>(Expression expression)
+        protected static TResult CompileExpressionItem<TResult>(Expression expression)
         {
             var visitor = new TestExpressionVisitor();
             var body = visitor.Visit(expression);

@@ -205,7 +205,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual(expectedCount, result.Count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetGetAllUserEntity()
         {
             //arrange
@@ -218,7 +218,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual(users.Count, result.Count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionGetAllUserEntity()
         {
             //arrange
@@ -231,7 +231,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual(users.Count, result.Count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetFindAsyncUserEntity()
         {
             //arrange
@@ -287,7 +287,7 @@ namespace MockQueryable.Sample
         }
 
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionFindAsyncUserEntity()
         {
             //arrange
@@ -342,7 +342,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual("FirstName3", result.FirstName);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetGetAllUserEntitiesAsync()
         {
             // arrange
@@ -359,7 +359,7 @@ namespace MockQueryable.Sample
         }
 
 
-        [TestCase]
+        [Test]
         public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
         {
             // arrange
@@ -377,7 +377,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual(users.Count, result2.Count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
         {
             // arrange
@@ -393,7 +393,7 @@ namespace MockQueryable.Sample
             Assert.AreEqual(users.Count, result.Count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionExecuteDeleteAsync()
         {
             // arrange
@@ -403,11 +403,15 @@ namespace MockQueryable.Sample
             var mockDbSet = users.BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
+            // act
             var count = await userRepository.DeleteUserAsync(userId);
+
+            // assert
             Assert.AreEqual(1, count);
+
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionExecuteDeleteAsync_ShouldReturnZero()
         {
             // arrange
@@ -417,11 +421,14 @@ namespace MockQueryable.Sample
             var mockDbSet = users.BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
+            //act
             var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
+
+            // assert
             Assert.AreEqual(0, count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionExecuteUpdateAsync()
         {
             // arrange
@@ -430,12 +437,15 @@ namespace MockQueryable.Sample
 
             var mockDbSet = users.BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mockDbSet.Object);
-
+            
+            //act
             var count = await userRepository.UpdateFirstNameByIdAsync(userId, "Unit Test");
+
+            //assert
             Assert.AreEqual(1, count);
         }
 
-        [TestCase]
+        [Test]
         public async Task DbSetCreatedFromCollectionExecuteUpdateAsync_ShouldReturnZero()
         {
             // arrange
@@ -445,7 +455,10 @@ namespace MockQueryable.Sample
             var mockDbSet = users.BuildMockDbSet();
             var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
+            //act
             var count = await userRepository.UpdateFirstNameByIdAsync(Guid.NewGuid(), "Unit Test");
+
+            //assert
             Assert.AreEqual(0, count);
         }
 
