@@ -6,8 +6,9 @@ using System.Linq.Expressions;
 
 namespace MockQueryable.Core
 {
-	public abstract class TestQueryProvider<T> : IOrderedQueryable<T>, IQueryProvider
-	{
+	public abstract class TestQueryProvider<T, TExpressionVisitor> : IOrderedQueryable<T>, IQueryProvider
+    where TExpressionVisitor : ExpressionVisitor, new()
+  {
 		private IEnumerable<T> _enumerable;
 
     protected TestQueryProvider(Expression expression)
@@ -40,7 +41,7 @@ namespace MockQueryable.Core
 
     private object CreateInstance(Type tElement, Expression expression)
     {
-      var queryType = GetType().GetGenericTypeDefinition().MakeGenericType(tElement);
+      var queryType = GetType().GetGenericTypeDefinition().MakeGenericType(tElement, typeof(TExpressionVisitor));
       return Activator.CreateInstance(queryType, expression);
 		}
 
@@ -74,7 +75,7 @@ namespace MockQueryable.Core
 
 		private static TResult CompileExpressionItem<TResult>(Expression expression)
 		{
-			var visitor = new TestExpressionVisitor();
+			var visitor = new TExpressionVisitor();
 			var body = visitor.Visit(expression);
 			var f = Expression.Lambda<Func<TResult>>(body ?? throw new InvalidOperationException($"{nameof(body)} is null"), (IEnumerable<ParameterExpression>) null);
 			return f.Compile()();

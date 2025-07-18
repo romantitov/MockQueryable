@@ -12,7 +12,7 @@ namespace MockQueryable.Sample
   public class MyService
   {
     private readonly IUserRepository _userRepository;
-    private static readonly MapperConfiguration _mapperConfiguration = new MapperConfiguration(
+    private static readonly MapperConfiguration _mapperConfiguration = new(
       cfg =>
       {
         cfg.CreateMap<UserEntity, UserReport>()

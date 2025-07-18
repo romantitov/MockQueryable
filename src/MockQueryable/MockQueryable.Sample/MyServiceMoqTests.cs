@@ -61,8 +61,6 @@ namespace MockQueryable.Sample
       Assert.That(expectedCount, Is.EqualTo(result.Count));
     }
 
-
-
     [TestCase("01/20/2012", "06/20/2018", 5)]
     [TestCase("01/20/2012", "06/20/2012", 4)]
     [TestCase("01/20/2012", "02/20/2012", 3)]
@@ -81,7 +79,6 @@ namespace MockQueryable.Sample
       //assert
       Assert.That(expectedCount, Is.EqualTo(result.Count));
     }
-
 
     [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
     [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
@@ -281,7 +278,6 @@ namespace MockQueryable.Sample
       Assert.That("FirstName3", Is.EqualTo(result.FirstName));
     }
 
-
     [TestCase]
     public async Task DbSetCreatedFromCollectionFindAsyncUserEntity()
     {
@@ -348,7 +344,6 @@ namespace MockQueryable.Sample
       Assert.That(users.Count, Is.EqualTo(result.Count));
     }
 
-
     [TestCase]
     public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
@@ -367,8 +362,6 @@ namespace MockQueryable.Sample
       Assert.That(users.Count, Is.EqualTo(result2.Count));
     }
 
-
-
     [TestCase]
     public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
     {
@@ -383,6 +376,43 @@ namespace MockQueryable.Sample
 
       // assert
       Assert.That(users.Count, Is.EqualTo(result.Count));
+    }
+
+    [TestCase]
+    public void GetUsersByFirstName_ExpressionVisitorMissing_ThrowsException()
+    {
+      // arrange
+      var users = CreateUserList();
+
+      var mockDbSet = users.AsQueryable().BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+      // act
+      var exception = Assert.ThrowsAsync<InvalidOperationException>(() => userRepository.GetUsersByFirstName("naME"));
+
+      // assert
+      Assert.That(
+        exception.Message,
+        Is.EqualTo(
+          "The 'ILike' method is not supported because the query has switched to client-evaluation. " +
+          "This usually happens when the arguments to the method cannot be translated to server. " +
+          "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
+    }
+
+    [TestCase]
+    public async Task GetUsersByFirstName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
+    {
+      // arrange
+      var users = CreateUserList();
+
+      var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleILikeExpressionVisitor>();
+      var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+      // act
+      var result = await userRepository.GetUsersByFirstName("naME");
+
+      // assert
+      Assert.That(users.Count, Is.EqualTo(result.Count()));
     }
 
     private static List<UserEntity> CreateUserList() => new()

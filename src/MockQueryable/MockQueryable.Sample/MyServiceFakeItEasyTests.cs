@@ -130,7 +130,7 @@ namespace MockQueryable.Sample
       var service = new MyService(userRepository);
       // act
       var ex = Assert.ThrowsAsync<ApplicationException>(() =>
-                                                            service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
+        service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
       // assert
       Assert.That(expectedError, Is.EqualTo(ex.Message));
     }
@@ -301,6 +301,43 @@ namespace MockQueryable.Sample
 
       // assert
       Assert.That(users.Count, Is.EqualTo(result.Count));
+    }
+
+    [TestCase]
+    public void GetUsersByFirstName_ExpressionVisitorMissing_ThrowsException()
+    {
+      // arrange
+      var users = CreateUserList();
+
+      var mockDbSet = users.AsQueryable().BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet);
+
+      // act
+      var exception = Assert.ThrowsAsync<InvalidOperationException>(() => userRepository.GetUsersByFirstName("naME"));
+
+      // assert
+      Assert.That(
+        exception.Message,
+        Is.EqualTo(
+          "The 'ILike' method is not supported because the query has switched to client-evaluation. " +
+          "This usually happens when the arguments to the method cannot be translated to server. " +
+          "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
+    }
+
+    [TestCase]
+    public async Task GetUsersByFirstName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
+    {
+      // arrange
+      var users = CreateUserList();
+
+      var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleILikeExpressionVisitor>();
+      var userRepository = new TestDbSetRepository(mockDbSet);
+
+      // act
+      var result = await userRepository.GetUsersByFirstName("naME");
+
+      // assert
+      Assert.That(users.Count, Is.EqualTo(result.Count()));
     }
 
     private static List<UserEntity> CreateUserList() => new()
