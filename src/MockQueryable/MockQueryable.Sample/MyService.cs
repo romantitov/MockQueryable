@@ -5,19 +5,25 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace MockQueryable.Sample
 {
   public class MyService
   {
     private readonly IUserRepository _userRepository;
+    private static readonly MapperConfiguration _mapperConfiguration = new(
+      cfg =>
+      {
+        cfg.CreateMap<UserEntity, UserReport>()
+          .ForMember(dto => dto.FirstName, conf => conf.MapFrom(ol => ol.FirstName))
+          .ForMember(dto => dto.LastName, conf => conf.MapFrom(ol => ol.LastName));
+      },
+      loggerFactory: new LoggerFactory());
 
     public static void Initialize()
     {
-      Mapper.Initialize(cfg => cfg.CreateMap<UserEntity, UserReport>()
-        .ForMember(dto => dto.FirstName, conf => conf.MapFrom(ol => ol.FirstName))
-        .ForMember(dto => dto.LastName, conf => conf.MapFrom(ol => ol.LastName)));
-      Mapper.Configuration.AssertConfigurationIsValid();
+      _mapperConfiguration.AssertConfigurationIsValid();
     }
 
     public MyService(IUserRepository userRepository)
@@ -68,7 +74,6 @@ namespace MockQueryable.Sample
       }).ToListAsync();
     }
 
-
     public async Task<List<UserReport>> GetUserReportsAutoMap(DateTime dateFrom, DateTime dateTo)
     {
       var query = _userRepository.GetQueryable();
@@ -76,7 +81,7 @@ namespace MockQueryable.Sample
       query = query.Where(x => x.DateOfBirth >= dateFrom.Date);
       query = query.Where(x => x.DateOfBirth <= dateTo.Date);
 
-      return await query.ProjectTo<UserReport>().ToListAsync();
+      return await query.ProjectTo<UserReport>(_mapperConfiguration).ToListAsync();
     }
   }
 
@@ -90,7 +95,6 @@ namespace MockQueryable.Sample
 
     IAsyncEnumerable<UserEntity> GetAllAsync();
   }
-
 
   public class UserReport
   {

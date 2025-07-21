@@ -8,7 +8,8 @@ using MockQueryable.Core;
 
 namespace MockQueryable.EntityFrameworkCore
 {
-  public class TestAsyncEnumerableEfCore<T>: TestQueryProvider<T>, IAsyncEnumerable<T>, IAsyncQueryProvider
+  public class TestAsyncEnumerableEfCore<T, TExpressionVisitor>: TestQueryProvider<T, TExpressionVisitor>, IAsyncEnumerable<T>, IAsyncQueryProvider
+    where TExpressionVisitor : ExpressionVisitor, new()
   {
     public TestAsyncEnumerableEfCore(Expression expression) : base(expression)
     {
@@ -25,11 +26,11 @@ namespace MockQueryable.EntityFrameworkCore
         .GetMethods()
         .First(method => method.Name == nameof(IQueryProvider.Execute) && method.IsGenericMethod)
         .MakeGenericMethod(expectedResultType)
-        .Invoke(this, new object[] { expression });
+        .Invoke(this, [expression]);
 
       return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
         .MakeGenericMethod(expectedResultType)
-        .Invoke(null, new[] { executionResult });
+        .Invoke(null, [executionResult]);
     }
 
     public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
