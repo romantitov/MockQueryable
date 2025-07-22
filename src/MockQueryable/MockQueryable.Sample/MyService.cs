@@ -92,7 +92,7 @@ namespace MockQueryable.Sample
 
         Task<int> DeleteUserAsync(Guid id);
 
-        Task<int> UpdateFirstNameByIdAsync(Guid id, string firstName);
+        Task<int> UpdateFirstAndLastNameByIdAsync(Guid id, string firstName);
     }
 
     public class UserReport

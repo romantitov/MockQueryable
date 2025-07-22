@@ -17,18 +17,47 @@ namespace MockQueryable.NSubstitute
       var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
       var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 
+      ConfigureAllCalls(mock, enumerable, data);
+
+      return mock;
+    }
+
+    public static DbSet<TEntity> BuildMockDbSetWithInterceptedExecuteDelete<TEntity>(
+      this ICollection<TEntity> data) where TEntity : class
+    {
+      var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data, x => data.Remove(x));
+
+      ConfigureAllCalls(mock, enumerable, data.AsQueryable());
+
+      return mock;
+    }
+
+    public static DbSet<TEntity> BuildMockDbSetWithInterceptedExecuteDelete<TEntity>(
+        this DbSet<TEntity> data) where TEntity : class
+    {
+      var mock = Substitute.For<DbSet<TEntity>, IQueryable<TEntity>, IAsyncEnumerable<TEntity>>();
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data, x => data.Remove(x));
+
+      ConfigureAllCalls(mock, enumerable, data.AsQueryable());
+
+      return mock;
+    }
+
+    private static void ConfigureAllCalls<TEntity>(
+        this DbSet<TEntity> mock,
+        TestAsyncEnumerableEfCore<TEntity> enumerable,
+        IQueryable<TEntity> data) where TEntity : class
+    {
       mock.ConfigureAsyncEnumerableCalls(enumerable);
       mock.ConfigureQueryableCalls(enumerable, data);
       mock.ConfigureDbSetCalls(data);
 
       if (mock is IAsyncEnumerable<TEntity> asyncEnumerable)
       {
-          asyncEnumerable.GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
+        asyncEnumerable.GetAsyncEnumerator(Arg.Any<CancellationToken>()).Returns(args => enumerable.GetAsyncEnumerator());
       }
-
-      return mock;
     }
-
 
     private static void ConfigureQueryableCalls<TEntity>(
       this IQueryable<TEntity> mock,

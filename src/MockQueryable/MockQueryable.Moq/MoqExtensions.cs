@@ -8,61 +8,93 @@ using Moq;
 
 namespace MockQueryable.Moq
 {
-	public static class MoqExtensions
-	{
-        
-		public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IEnumerable<TEntity> data) where TEntity : class => data.BuildMock().BuildMockDbSet();
+  public static class MoqExtensions
+  {
 
-		public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
-		{
-			var mock = new Mock<DbSet<TEntity>>();
-			var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
-			mock.ConfigureAsyncEnumerableCalls(enumerable);
-			mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
-            mock.As<IAsyncEnumerable<TEntity>>().Setup(x => x.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(() => enumerable.GetAsyncEnumerator());
-			mock.Setup(m => m.AsQueryable()).Returns(enumerable);
+    public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IEnumerable<TEntity> data) where TEntity : class => data.BuildMock().BuildMockDbSet();
 
-			mock.ConfigureDbSetCalls(data);
-			return mock;
-		}
+    public static Mock<DbSet<TEntity>> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+    {
+      var mock = new Mock<DbSet<TEntity>>();
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data);
 
-		private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock, IQueryable<TEntity> data) 
-			where TEntity : class
-		{
-			mock.Setup(m => m.AsQueryable()).Returns(mock.Object);
-			mock.Setup(m => m.AsAsyncEnumerable()).Returns(CreateAsyncMock(data));
-		}
+      ConfigureAllCalls(mock, enumerable, data);
 
-		private static void ConfigureQueryableCalls<TEntity>(
-			this Mock<IQueryable<TEntity>> mock,
-			IQueryProvider queryProvider,
-			IQueryable<TEntity> data) where TEntity : class
-		{
-			mock.Setup(m => m.Provider).Returns(queryProvider);
-			mock.Setup(m => m.Expression).Returns(data?.Expression);
-			mock.Setup(m => m.ElementType).Returns(data?.ElementType);
-			mock.Setup(m => m.GetEnumerator()).Returns(() => data?.GetEnumerator());
+      return mock;
+    }
 
-		}
+    public static Mock<DbSet<TEntity>> BuildMockDbSetWithInterceptedExecuteDelete<TEntity>(
+      this ICollection<TEntity> data) where TEntity : class
+    {
+      var mock = new Mock<DbSet<TEntity>>();
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data, x => data.Remove(x));
 
-		private static void ConfigureAsyncEnumerableCalls<TEntity>(
-			this Mock<DbSet<TEntity>> mock,
-			IAsyncEnumerable<TEntity> enumerable)where TEntity : class
-		{
-			mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
-				.Returns(() => enumerable.GetAsyncEnumerator());
-            
-		}
+      ConfigureAllCalls(mock, enumerable, data.AsQueryable());
 
-        private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)
-            where TEntity : class
-        {
-            foreach (var entity in data)
-            {
-                yield return entity;
-            }
+      return mock;
+    }
 
-            await Task.CompletedTask;
-        }
-	}
+    public static Mock<DbSet<TEntity>> BuildMockDbSetWithInterceptedExecuteDelete<TEntity>(
+        this DbSet<TEntity> data) where TEntity : class
+    {
+      var mock = new Mock<DbSet<TEntity>>();
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity>(data, x => data.Remove(x));
+
+      ConfigureAllCalls(mock, enumerable, data.AsQueryable());
+
+      return mock;
+    }
+
+    private static void ConfigureAllCalls<TEntity>(
+        this Mock<DbSet<TEntity>> mock,
+        TestAsyncEnumerableEfCore<TEntity> enumerable,
+        IQueryable<TEntity> data) where TEntity : class
+    {
+      mock.ConfigureAsyncEnumerableCalls(enumerable);
+      mock.As<IQueryable<TEntity>>().ConfigureQueryableCalls(enumerable, data);
+      mock.As<IAsyncEnumerable<TEntity>>().Setup(x => x.GetAsyncEnumerator(It.IsAny<CancellationToken>())).Returns(() => enumerable.GetAsyncEnumerator());
+      mock.Setup(m => m.AsQueryable()).Returns(enumerable);
+
+      mock.ConfigureDbSetCalls(data);
+    }
+
+    private static void ConfigureDbSetCalls<TEntity>(this Mock<DbSet<TEntity>> mock, IQueryable<TEntity> data)
+      where TEntity : class
+    {
+      mock.Setup(m => m.AsQueryable()).Returns(mock.Object);
+      mock.Setup(m => m.AsAsyncEnumerable()).Returns(CreateAsyncMock(data));
+    }
+
+    private static void ConfigureQueryableCalls<TEntity>(
+      this Mock<IQueryable<TEntity>> mock,
+      IQueryProvider queryProvider,
+      IQueryable<TEntity> data) where TEntity : class
+    {
+      mock.Setup(m => m.Provider).Returns(queryProvider);
+      mock.Setup(m => m.Expression).Returns(data?.Expression);
+      mock.Setup(m => m.ElementType).Returns(data?.ElementType);
+      mock.Setup(m => m.GetEnumerator()).Returns(() => data?.GetEnumerator());
+
+    }
+
+    private static void ConfigureAsyncEnumerableCalls<TEntity>(
+      this Mock<DbSet<TEntity>> mock,
+      IAsyncEnumerable<TEntity> enumerable) where TEntity : class
+    {
+      mock.Setup(d => d.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
+        .Returns(() => enumerable.GetAsyncEnumerator());
+
+    }
+
+    private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)
+        where TEntity : class
+    {
+      foreach (var entity in data)
+      {
+        yield return entity;
+      }
+
+      await Task.CompletedTask;
+    }
+  }
 }

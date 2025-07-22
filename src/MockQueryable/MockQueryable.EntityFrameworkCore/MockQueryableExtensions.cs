@@ -9,11 +9,11 @@ using System.Linq;
 // is dependent on the EF Core AsyncEnumerable.
 namespace MockQueryable
 {
-    public static class MockQueryableExtensions
+  public static class MockQueryableExtensions
+  {
+    public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
     {
-        public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
-        {
-            return new TestAsyncEnumerableEfCore<TEntity>(data);
-        }
+      return new TestAsyncEnumerableEfCore<TEntity>(data);
     }
+  }
 }
