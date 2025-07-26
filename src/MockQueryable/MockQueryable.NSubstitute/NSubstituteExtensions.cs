@@ -36,7 +36,12 @@ namespace MockQueryable.NSubstitute
     }
 
     /// <summary>
-    /// See <see cref="BuildMockDbSet{TEntity}"/>.
+    /// This method allows you to create a mock DbSet for testing purposes.
+    /// It is particularly useful when you want to simulate the behavior of Entity Framework Core's DbSet
+    /// with custom expression handling, such as for testing LINQ queries or database operations.
+    /// The method takes an IQueryable of the entity type and returns a mocked DbSet that implements
+    /// both IAsyncEnumerable and IQueryable interfaces, allowing for asynchronous enumeration
+    /// and LINQ query capabilities.
     /// </summary>
     /// <typeparam name="TEntity">
     /// The type of the entity that the DbSet will represent.
