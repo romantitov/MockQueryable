@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8</TargetFramework>
     <PackageId>MockQueryable.Core</PackageId>
 		<Authors>Roman Titov</Authors>
 	  <Description>
@@ -14,11 +14,14 @@
 	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageReleaseNotes>
-		  #80  Altered namespace for extension method to revert a breaking change - Thanks @StevePy
+		  #81  Add support to ExecuteDelete and ExecuteUpdate - Thanks @lazaro-ansaldi and @Catlandor
+		  #82  Update versions of Moq, NSubstitute and FakeItEasy to newer versions without known vulnerabilities - Thanks @Catlandor
+		  #73  Supporting EF.Functions.Like and/or prossibility to provide cusotm ExpressionVisitor - Thanks @Catlandor
+		  #66  Not suported with EF7: ExecuteDeleteAsync and ExecuteUpdateAsync - Thanks @Catlandor
 	  </PackageReleaseNotes>
-	  <Version>7.0.3</Version>
-	  <AssemblyVersion>7.0.0.3</AssemblyVersion>
-	  <FileVersion>7.0.0.3</FileVersion>
+	  <Version>8.0.0</Version>
+	  <AssemblyVersion>8.0.0.0</AssemblyVersion>
+	  <FileVersion>8.0.0.0</FileVersion>
 	  <Company></Company>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -56,7 +56,7 @@ Do you prefer *DbSet*?
 
 ```csharp
 //2 - build mock by extension
-var mock = users.AsQueryable().BuildMockDbSet();
+var mock = users.BuildMockDbSet();
 
 //3 - setup DbSet for Moq
 var userRepository = new TestDbSetRepository(mock.Object);
@@ -77,7 +77,7 @@ var users = new List<UserEntity>
     new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
    //etc. 
 };
-var mock = users.AsQueryable().BuildMockDbSet();
+var mock = users.BuildMockDbSet();
 
 //Aditional setup for FindAsync
 mock.Setup(x => x.FindAsync(userId)).ReturnsAsync((object[] ids) =>
@@ -89,6 +89,22 @@ var userRepository = new TestDbSetRepository(mock.Object);
 
 //Execution FindAsync
 var user = await ((DbSet<UserEntity>) userRepository.GetQueryable()).FindAsync(userId);
+```
+
+You can also add your custom expression visitor with custom logic:
+
+```C#
+
+var users = new List<UserEntity>
+{
+    new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
+    //etc. 
+};
+
+//Bould mock with custom  SampleLikeExpressionVisitor, that emulates EF.Functions.Like
+var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
 ```
 
 Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
