@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,18 @@ namespace MockQueryable.Sample
         return await _dbSet
             .Where(x => EF.Functions.ILike(x.LastName, $"%{firstName}%"))
             .ToListAsync();
+    }
+
+    public async Task<int> DeleteUserAsync(Guid id)
+    {
+        return await _dbSet.Where(x => x.Id == id)
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task<int> UpdateFirstAndLastNameByIdAsync(Guid id, string firstName)
+    {
+        return await _dbSet.Where(x => x.Id == id)
+            .ExecuteUpdateAsync(opt => opt.SetProperty(x => x.FirstName, firstName).SetProperty(x => x.LastName, firstName));
     }
   }
 }

@@ -13,17 +13,17 @@ namespace MockQueryable
 {
   public static class MockQueryableExtensions
   {
-    public static IQueryable<TEntity> BuildMock<TEntity>(this IEnumerable<TEntity> data)
+    public static IQueryable<TEntity> BuildMock<TEntity>(this ICollection<TEntity> data)
      where TEntity : class
     {
-      return new TestAsyncEnumerableEfCore<TEntity, TestExpressionVisitor>(data);
+      return new TestAsyncEnumerableEfCore<TEntity, TestExpressionVisitor>(data, entity => data.Remove(entity));
     }
 
-    public static IQueryable<TEntity> BuildMock<TEntity, TExpressionVisitor>(this IEnumerable<TEntity> data)
+    public static IQueryable<TEntity> BuildMock<TEntity, TExpressionVisitor>(this ICollection<TEntity> data)
       where TEntity : class
       where TExpressionVisitor : ExpressionVisitor, new()
     {
-      return new TestAsyncEnumerableEfCore<TEntity, TExpressionVisitor>(data);
+      return new TestAsyncEnumerableEfCore<TEntity, TExpressionVisitor>(data, entity => data.Remove(entity));
     }
   }
 }

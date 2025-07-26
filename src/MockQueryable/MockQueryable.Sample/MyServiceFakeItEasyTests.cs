@@ -1,13 +1,13 @@
-﻿using System;
+﻿using FakeItEasy;
+using Microsoft.EntityFrameworkCore;
+using MockQueryable.FakeItEasy;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FakeItEasy;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.FakeItEasy;
-using NUnit.Framework;
 
 namespace MockQueryable.Sample;
 
@@ -54,7 +54,7 @@ public class MyServiceFakeItEasyTests
         //arrange
         var userRepository = A.Fake<IUserRepository>();
         var service = new MyService(userRepository);
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         //expect
         var mock = users.BuildMock();
         A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
@@ -73,7 +73,7 @@ public class MyServiceFakeItEasyTests
         // arrange
         var userRepository = A.Fake<IUserRepository>();
         var service = new MyService(userRepository);
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         // expect
         var mock = users.BuildMock();
         A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
@@ -99,7 +99,7 @@ public class MyServiceFakeItEasyTests
             new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
             new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
         };
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock);
         var service = new MyService(userRepository);
 
@@ -140,7 +140,7 @@ public class MyServiceFakeItEasyTests
     {
         // arrange
         var userEntities = new List<UserEntity>();
-        var mock = userEntities.AsQueryable().BuildMockDbSet();
+        var mock = userEntities.BuildMockDbSet();
         A.CallTo(() => mock.AddAsync(A<UserEntity>._, A<CancellationToken>._))
             .ReturnsLazily(call =>
             {
@@ -192,8 +192,8 @@ public class MyServiceFakeItEasyTests
     public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
     {
         // arrange
-        var users = CreateUserList();
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var users = TestDataHelper.CreateUserList();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock);
         var service = new MyService(userRepository);
 
@@ -211,7 +211,7 @@ public class MyServiceFakeItEasyTests
     public async Task DbSetCreatedFromCollectionGetUserReports(DateTime from, DateTime to, int expectedCount)
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock);
         var service = new MyService(userRepository);
@@ -227,23 +227,7 @@ public class MyServiceFakeItEasyTests
     public async Task DbSetGetAllUserEntitiesAsync()
     {
         // arrange
-        var users = CreateUserList();
-
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mockDbSet);
-
-        // act
-        var result = await userRepository.GetAllAsync().ToListAsync();
-
-        // assert
-        Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [TestCase]
-    public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
-    {
-        // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
         var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet);
@@ -255,30 +239,48 @@ public class MyServiceFakeItEasyTests
         Assert.That(users.Count, Is.EqualTo(result.Count));
     }
 
-    [TestCase]
-    public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
+    [Test]
+    public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
+    {
+      // arrange
+      var users = TestDataHelper.CreateUserList();
+
+      var mockDbSet = users.BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet);
+
+      // act
+      var result = await userRepository.GetAllAsync().ToListAsync();
+
+        // assert
+        Assert.That(users.Count, Is.EqualTo(result.Count));
+    }
+
+    [Test]
+    public async Task DbSetGetAllUserEntitiesAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
         // arrange
         var users = new List<UserEntity>();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
 
         // act
-        var result1 = await mockDbSet.ToListAsync();
-        users.AddRange(CreateUserList());
-        var result2 = await mockDbSet.ToListAsync();
+        var result1 = await userRepository.GetAllAsync().ToListAsync();
+        users.AddRange(TestDataHelper.CreateUserList());
+        var result2 = await userRepository.GetAllAsync().ToListAsync();
 
         // assert
         Assert.That(0, Is.EqualTo(result1.Count));
         Assert.That(users.Count, Is.EqualTo(result2.Count));
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetGetAllUserEntity()
     {
         //arrange
-        var users = CreateUserList();
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var users = TestDataHelper.CreateUserList();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock);
 
         //act
@@ -288,11 +290,11 @@ public class MyServiceFakeItEasyTests
         Assert.That(users.Count, Is.EqualTo(result.Count));
     }
 
-    [TestCase]
+    [Test]
     public async Task DbSetCreatedFromCollectionGetAllUserEntity()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock);
 
@@ -307,9 +309,9 @@ public class MyServiceFakeItEasyTests
     public void GetUsersByFirstName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet);
 
         // act
@@ -328,9 +330,9 @@ public class MyServiceFakeItEasyTests
     public async Task GetUsersByFirstName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+        var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
         var userRepository = new TestDbSetRepository(mockDbSet);
 
         // act
@@ -344,9 +346,9 @@ public class MyServiceFakeItEasyTests
     public void GetUsersByLastName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet);
 
         // act
@@ -365,9 +367,9 @@ public class MyServiceFakeItEasyTests
     public async Task GetUsersByLastName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+        var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
         var userRepository = new TestDbSetRepository(mockDbSet);
 
         // act
@@ -377,37 +379,88 @@ public class MyServiceFakeItEasyTests
         Assert.That(result.Count, Is.EqualTo(3));
     }
 
-    private static List<UserEntity> CreateUserList() =>
-    [
-        new UserEntity
-        {
-            FirstName = "FirstName1", LastName = "LastName1",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
 
-        new UserEntity
-        {
-            FirstName = "FirstName2", LastName = "LastName2",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
 
-        new UserEntity
-        {
-            FirstName = "FirstName3", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
+    [Test]
+    public async Task DbSetCreatedFromCollection_ExecuteDeleteAsync()
+    {
+      // arrange
+      var userId = Guid.NewGuid();
+      var users = TestDataHelper.CreateUserList(userId);
 
-        new UserEntity
-        {
-            FirstName = "FirstName3", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat)
-        },
+      var mockDbSet = users.BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet);
 
-        new UserEntity
-        {
-            FirstName = "FirstName5", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat)
-        }
+      // act
+      var count = await userRepository.DeleteUserAsync(userId);
 
-    ];
+      // assert
+      Assert.That(count, Is.EqualTo(1));
+      var updatedUsers = await userRepository.GetAllAsync().ToListAsync();
+      Assert.That(updatedUsers.Any(x => x.Id == userId), Is.EqualTo(false));
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteDeleteAsync_ShouldReturnZero()
+    {
+      // arrange
+      var userId = Guid.NewGuid();
+      var users = TestDataHelper.CreateUserList(userId);
+
+      var mockDbSet = users.BuildMockDbSet();
+      var userRepository = new TestDbSetRepository(mockDbSet);
+
+      //act
+      var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
+
+      // assert
+      Assert.That(count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync()
+    {
+        // arrange
+        var expectedName = "Unit Test";
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        //act
+        var count = await userRepository.UpdateFirstAndLastNameByIdAsync(userId, expectedName);
+
+        //assert
+        Assert.That(count, Is.EqualTo(1));
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(expectedName, Is.EqualTo(user.FirstName)); 
+        Assert.That(expectedName, Is.EqualTo(user.LastName)); 
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync_ShouldReturnZero()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+        var arrangeUser = users.Single(x => x.Id == userId);
+        var expectedFirstName = arrangeUser.FirstName;
+        var expectedLastName = arrangeUser.LastName;
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        //act
+        var count = await userRepository.UpdateFirstAndLastNameByIdAsync(Guid.NewGuid(), "Unit Test");
+
+        //assert
+        Assert.That(count, Is.EqualTo(0));
+
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName)); 
+        Assert.That(expectedLastName, Is.EqualTo(user.LastName)); 
+    }
+
+
+   
 }

@@ -12,14 +12,6 @@ namespace MockQueryable.FakeItEasy
 {
   public static class FakeItEasyExtensions
   {
-    public static DbSet<TEntity> BuildMockDbSet<TEntity, TExpressionVisitor>(this IEnumerable<TEntity> data)
-      where TEntity : class
-      where TExpressionVisitor : ExpressionVisitor, new()
-      => data.BuildMock<TEntity, TExpressionVisitor>().BuildMockDbSet();
-
-    public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IEnumerable<TEntity> data)
-      where TEntity : class
-      => data.BuildMock().BuildMockDbSet();
 
     /// <summary>
     /// This method allows you to create a mock DbSet for testing purposes.
@@ -32,7 +24,7 @@ namespace MockQueryable.FakeItEasy
     /// <typeparam name="TEntity">
     /// The type of the entity that the DbSet will represent.
     /// </typeparam>
-    public static DbSet<TEntity> BuildMockDbSet<TEntity>(this IQueryable<TEntity> data) where TEntity : class
+    public static DbSet<TEntity> BuildMockDbSet<TEntity>(this ICollection<TEntity> data) where TEntity : class
     {
       return BuildMockDbSet<TEntity, TestExpressionVisitor>(data);
     }
@@ -52,15 +44,15 @@ namespace MockQueryable.FakeItEasy
     /// The type of the expression visitor that will be used to process LINQ expressions.
     /// Can be used to mock EF Core specific expression handling, such as for ILike expressions.
     /// </typeparam>
-    public static DbSet<TEntity> BuildMockDbSet<TEntity, TExpressionVisitor>(this IQueryable<TEntity> data)
+    public static DbSet<TEntity> BuildMockDbSet<TEntity, TExpressionVisitor>(this ICollection<TEntity> data)
       where TEntity : class
       where TExpressionVisitor : ExpressionVisitor, new()
     {
       var mock = A.Fake<DbSet<TEntity>>(d => d.Implements<IAsyncEnumerable<TEntity>>().Implements<IQueryable<TEntity>>());
-      var enumerable = new TestAsyncEnumerableEfCore<TEntity, TExpressionVisitor>(data);
-      mock.ConfigureQueryableCalls(enumerable, data);
+      var enumerable = new TestAsyncEnumerableEfCore<TEntity, TExpressionVisitor>(data, entity => data.Remove(entity));
+      mock.ConfigureQueryableCalls(enumerable, data.AsQueryable());
       mock.ConfigureAsyncEnumerableCalls(enumerable);
-      mock.ConfigureDbSetCalls(data);
+      mock.ConfigureDbSetCalls(data.AsQueryable());
 
       if (mock is IAsyncEnumerable<TEntity> asyncEnumerable)
       {
@@ -92,13 +84,15 @@ namespace MockQueryable.FakeItEasy
     private static void ConfigureDbSetCalls<TEntity>(this DbSet<TEntity> mock, IQueryable<TEntity> data)
       where TEntity : class
     {
-      A.CallTo(() => mock.AsQueryable()).Returns(data);
+      A.CallTo(() => mock.AsQueryable()).Returns(data.AsQueryable());
       A.CallTo(() => mock.AsAsyncEnumerable()).ReturnsLazily(args => CreateAsyncMock(data));
     }
 
-    private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(IEnumerable<TEntity> data)
+    private static async IAsyncEnumerable<TEntity> CreateAsyncMock<TEntity>(
+      this IEnumerable<TEntity> data)
       where TEntity : class
     {
+
       foreach (var entity in data)
       {
         yield return entity;

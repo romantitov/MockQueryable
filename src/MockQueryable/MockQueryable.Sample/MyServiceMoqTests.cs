@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MockQueryable.Sample;
 
 [TestFixture]
 public class MyServiceMoqTests
 {
-    private static readonly CultureInfo UsCultureInfo = new("en-US");
+   
 
     [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
     [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
@@ -26,11 +25,14 @@ public class MyServiceMoqTests
         var service = new MyService(userRepository.Object);
         var users = new List<UserEntity>
         {
-            new() {LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {FirstName = "ExistFirstName"},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)}
+            new()
+            {
+                LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat)
+            },
+            new() { FirstName = "ExistFirstName" },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) }
         };
         //expect
         var mock = users.BuildMock();
@@ -51,7 +53,7 @@ public class MyServiceMoqTests
         //arrange
         var userRepository = new Mock<IUserRepository>();
         var service = new MyService(userRepository.Object);
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         //expect
         var mock = users.BuildMock();
         userRepository.Setup(x => x.GetQueryable()).Returns(mock);
@@ -70,7 +72,7 @@ public class MyServiceMoqTests
         //arrange
         var userRepository = new Mock<IUserRepository>();
         var service = new MyService(userRepository.Object);
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         //expect
         var mock = users.BuildMock();
         userRepository.Setup(x => x.GetQueryable()).Returns(mock);
@@ -88,13 +90,16 @@ public class MyServiceMoqTests
         //arrange
         var users = new List<UserEntity>
         {
-            new() {LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {FirstName = "ExistFirstName"},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)}
+            new()
+            {
+                LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat)
+            },
+            new() { FirstName = "ExistFirstName" },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) }
         };
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
         var service = new MyService(userRepository);
         //act
@@ -107,16 +112,20 @@ public class MyServiceMoqTests
     [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
     [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
     [TestCase("AnyFirstName", "ExistLastName", "01/20/2012", "User already exist")]
-    public void DbSetCreatedFromCollectionCreateUserIfNotExist(string firstName, string lastName, DateTime dateOfBirth, string expectedError)
+    public void DbSetCreatedFromCollectionCreateUserIfNotExist(string firstName, string lastName, DateTime dateOfBirth,
+        string expectedError)
     {
         //arrange
         var users = new List<UserEntity>
         {
-            new() {LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {FirstName = "ExistFirstName"},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)}
+            new()
+            {
+                LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat)
+            },
+            new() { FirstName = "ExistFirstName" },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012", TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) },
+            new() { DateOfBirth = DateTime.Parse("01/20/2012",  TestDataHelper.UsCultureInfo.DateTimeFormat) }
         };
         var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
@@ -133,7 +142,7 @@ public class MyServiceMoqTests
     {
         //arrange
         var userEntities = new List<UserEntity>();
-        var mock = userEntities.AsQueryable().BuildMockDbSet();
+        var mock = userEntities.BuildMockDbSet();
 
         mock.Setup(set => set.AddAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
             .Callback((UserEntity entity, CancellationToken _) => userEntities.Add(entity));
@@ -175,8 +184,8 @@ public class MyServiceMoqTests
     public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
     {
         //arrange
-        var users = CreateUserList();
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var users = TestDataHelper.CreateUserList();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
         var service = new MyService(userRepository);
         //act
@@ -192,7 +201,7 @@ public class MyServiceMoqTests
     public async Task DbSetCreatedFromCollectionGetUserReports(DateTime from, DateTime to, int expectedCount)
     {
         //arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
         var service = new MyService(userRepository);
@@ -206,8 +215,8 @@ public class MyServiceMoqTests
     public async Task DbSetGetAllUserEntity()
     {
         //arrange
-        var users = CreateUserList();
-        var mock = users.AsQueryable().BuildMockDbSet();
+        var users = TestDataHelper.CreateUserList();
+        var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
         //act
         var result = await userRepository.GetAll();
@@ -219,7 +228,7 @@ public class MyServiceMoqTests
     public async Task DbSetCreatedFromCollectionGetAllUserEntity()
     {
         //arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
         var mock = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mock.Object);
         //act
@@ -233,84 +242,7 @@ public class MyServiceMoqTests
     {
         //arrange
         var userId = Guid.NewGuid();
-        var users = new List<UserEntity>
-        {
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName1", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName2", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = userId,
-                FirstName = "FirstName3", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName3", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName5", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat)
-            }
-        };
-
-        var mock = users.AsQueryable().BuildMockDbSet();
-        mock.Setup(x => x.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) =>
-        {
-            var id = (Guid)ids.First();
-            return users.FirstOrDefault(x => x.Id == id);
-        });
-        var userRepository = new TestDbSetRepository(mock.Object);
-
-        //act
-        var result = await ((DbSet<UserEntity>)userRepository.GetQueryable()).FindAsync(userId);
-
-        //assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That("FirstName3", Is.EqualTo(result.FirstName));
-    }
-
-    [TestCase]
-    public async Task DbSetCreatedFromCollectionFindAsyncUserEntity()
-    {
-        //arrange
-        var userId = Guid.NewGuid();
-        var users = new List<UserEntity>
-        {
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName1", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName2", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = userId,
-                FirstName = "FirstName3", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName3", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat)
-            },
-            new() {
-                Id = Guid.NewGuid(),
-                FirstName = "FirstName5", LastName = "LastName",
-                DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat)
-            }
-        };
+        var users = TestDataHelper.CreateUserList(userId);
 
         var mock = users.BuildMockDbSet();
         mock.Setup(x => x.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) =>
@@ -325,16 +257,38 @@ public class MyServiceMoqTests
 
         //assert
         Assert.That(result, Is.Not.Null);
-        Assert.That("FirstName3", Is.EqualTo(result.FirstName));
+        Assert.That("FirstName1", Is.EqualTo(result.FirstName));
+    }
+
+    [TestCase]
+    public async Task DbSetCreatedFromCollectionFindAsyncUserEntity()
+    {
+        //arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+        var mock = users.BuildMockDbSet();
+        mock.Setup(x => x.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) =>
+        {
+            var id = (Guid)ids.First();
+            return users.FirstOrDefault(x => x.Id == id);
+        });
+        var userRepository = new TestDbSetRepository(mock.Object);
+
+        //act
+        var result = await ((DbSet<UserEntity>)userRepository.GetQueryable()).FindAsync(userId);
+
+        //assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That("FirstName1", Is.EqualTo(result.FirstName));
     }
 
     [TestCase]
     public async Task DbSetGetAllUserEntitiesAsync()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
@@ -350,12 +304,13 @@ public class MyServiceMoqTests
         // arrange
         var users = new List<UserEntity>();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
-        var result1 = await mockDbSet.Object.ToListAsync();
-        users.AddRange(CreateUserList());
-        var result2 = await mockDbSet.Object.ToListAsync();
+        var result1 = await userRepository.GetAllAsync().ToListAsync();
+        users.AddRange( TestDataHelper.CreateUserList());
+        var result2 = await userRepository.GetAllAsync().ToListAsync();
 
         // assert
         Assert.That(0, Is.EqualTo(result1.Count));
@@ -366,7 +321,7 @@ public class MyServiceMoqTests
     public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
         var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
@@ -382,13 +337,14 @@ public class MyServiceMoqTests
     public void GetUsersByFirstName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
-        var exception = Assert.ThrowsAsync<InvalidOperationException>(() => userRepository.GetUsersByFirstName("naME4"));
+        var exception =
+            Assert.ThrowsAsync<InvalidOperationException>(() => userRepository.GetUsersByFirstName("naME4"));
 
         // assert
         Assert.That(
@@ -399,14 +355,14 @@ public class MyServiceMoqTests
                 "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
     }
 
-    
+
     [TestCase]
     public async Task GetUsersByFirstName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+        var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
@@ -420,9 +376,9 @@ public class MyServiceMoqTests
     public void GetUsersByLastName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet();
+        var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
@@ -441,9 +397,9 @@ public class MyServiceMoqTests
     public async Task GetUsersByLastName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
-        var users = CreateUserList();
+        var users = TestDataHelper.CreateUserList();
 
-        var mockDbSet = users.AsQueryable().BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+        var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
@@ -453,37 +409,88 @@ public class MyServiceMoqTests
         Assert.That(result.Count(), Is.EqualTo(3));
     }
 
-    private static List<UserEntity> CreateUserList() =>
-    [
-        new UserEntity
-        {
-            FirstName = "FirstName1", LastName = "LastName1",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
 
-        new UserEntity
-        {
-            FirstName = "FirstName2", LastName = "LastName2",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
+    [Test]
+    public async Task DbSetCreatedFromCollection_ExecuteDeleteAsync()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
 
-        new UserEntity
-        {
-            FirstName = "FirstName3", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)
-        },
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
-        new UserEntity
-        {
-            FirstName = "FirstName3", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("03/20/2012", UsCultureInfo.DateTimeFormat)
-        },
+        // act
+        var count = await userRepository.DeleteUserAsync(userId);
 
-        new UserEntity
-        {
-            FirstName = "FirstName5", LastName = "LastName4",
-            DateOfBirth = DateTime.Parse("01/20/2018", UsCultureInfo.DateTimeFormat)
-        }
+        // assert
+        Assert.That(count, Is.EqualTo(1));
+        var updatedUsers = await userRepository.GetAllAsync().ToListAsync();
+        Assert.That(updatedUsers.Any(x => x.Id == userId), Is.EqualTo(false));
 
-    ];
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteDeleteAsync_ShouldReturnZero()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+        //act
+        var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
+
+        // assert
+        Assert.That(count, Is.EqualTo(0));
+
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync()
+    {
+        // arrange
+        var expectedName = "Unit Test";
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+        //act
+        var count = await userRepository.UpdateFirstAndLastNameByIdAsync(userId, expectedName);
+
+        //assert
+        Assert.That(count, Is.EqualTo(1));
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(expectedName, Is.EqualTo(user.FirstName)); 
+        Assert.That(expectedName, Is.EqualTo(user.LastName)); 
+    }
+
+    [Test]
+    public async Task DbSetCreatedFromCollectionExecuteUpdateAsync_ShouldReturnZero()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+        var arrangeUser = users.Single(x => x.Id == userId);
+        var expectedFirstName = arrangeUser.FirstName;
+        var expectedLastName = arrangeUser.LastName;
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+        //act
+        var count = await userRepository.UpdateFirstAndLastNameByIdAsync(Guid.NewGuid(), "Unit Test");
+
+        //assert
+        Assert.That(count, Is.EqualTo(0));
+
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName)); 
+        Assert.That(expectedLastName, Is.EqualTo(user.LastName)); 
+    }
+
+    
 }

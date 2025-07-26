@@ -14,11 +14,11 @@
     <PackageTags>Mock EntityFrameworkCore Queryable mock EF EFCore UnitTests EntityFrameworkCore Moq</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageReleaseNotes>
-		  #80  Altered namespace for extension method to revert a breaking change - Thanks @StevePy
+		  #81  Add support to ExecuteDelete and ExecuteUpdate - Thanks @lazaro-ansaldi
 	  </PackageReleaseNotes>
-	  <Version>7.0.3</Version>
-	  <AssemblyVersion>7.0.0.3</AssemblyVersion>
-	  <FileVersion>7.0.0.3</FileVersion>
+	  <Version>7.0.4-beta</Version>
+	  <AssemblyVersion>7.0.0.4</AssemblyVersion>
+	  <FileVersion>7.0.0.4</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
