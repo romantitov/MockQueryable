@@ -1,162 +1,134 @@
+# MockQueryable
 
-# MockQueryable 
+Extensions for mocking [Entity Framework Core](https://github.com/dotnet/efcore) async queries like `ToListAsync`, `FirstOrDefaultAsync`, and more using popular mocking libraries such as **Moq**, **NSubstitute**, and **FakeItEasy** — all without hitting the database.
 
-[![MockQueryable.Core](https://img.shields.io/nuget/dt/MockQueryable.Core.svg)](https://www.nuget.org/packages/MockQueryable.Core/)
-[![MockQueryable.EntityFrameworkCore](https://img.shields.io/nuget/dt/MockQueryable.EntityFrameworkCore.svg)](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/)
-[![MockQueryable.Moq](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
-[![MockQueryable.NSubstitute](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
-[![MockQueryable.FakeItEasy](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
+---
 
-[![Build status](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)](https://github.com/romantitov/MockQueryable/actions)
-[![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
+## 📦 NuGet Packages
+
+| Package | Downloads | Latest Version | Install via Package Manager |
+|--------|-----------|----------------|------------------------------|
+| [MockQueryable.Core](https://www.nuget.org/packages/MockQueryable.Core/) | ![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Core.svg) | ![Version](https://img.shields.io/nuget/v/MockQueryable.Core.svg) | `Install-Package MockQueryable.Core` |
+| [MockQueryable.EntityFrameworkCore](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/) | ![Downloads](https://img.shields.io/nuget/dt/MockQueryable.EntityFrameworkCore.svg) | ![Version](https://img.shields.io/nuget/v/MockQueryable.EntityFrameworkCore.svg) | `Install-Package MockQueryable.EntityFrameworkCore` |
+| [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) | ![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg) | ![Version](https://img.shields.io/nuget/v/MockQueryable.Moq.svg) | `Install-Package MockQueryable.Moq` |
+| [MockQueryable.NSubstitute](https://www.nuget.org/packages/MockQueryable.NSubstitute/) | ![Downloads](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg) | ![Version](https://img.shields.io/nuget/v/MockQueryable.NSubstitute.svg) | `Install-Package MockQueryable.NSubstitute` |
+| [MockQueryable.FakeItEasy](https://www.nuget.org/packages/MockQueryable.FakeItEasy/) | ![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg) | ![Version](https://img.shields.io/nuget/v/MockQueryable.FakeItEasy.svg) | `Install-Package MockQueryable.FakeItEasy` |
+
+---
+
+## ✅ Build & Status
+
+![.NET Core](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
 [![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/stargazers)
-[![Version](https://badge.fury.io/gh/romantitov%2FMockQueryable.svg)](https://github.com/romantitov/MockQueryable/releases)
-[![GitHub contributors](https://img.shields.io/github/contributors/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/contributors)
-[![GitHub last commit](https://img.shields.io/github/last-commit/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/commit-activity)
-[![open issues](https://img.shields.io/github/issues/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/issues)
+---
 
-------
+## ⭐ GitHub Stats
 
+![Stars](https://img.shields.io/github/stars/romantitov/MockQueryable)
+![Contributors](https://img.shields.io/github/contributors/romantitov/MockQueryable)
+![Last Commit](https://img.shields.io/github/last-commit/romantitov/MockQueryable)
+![Commit Activity](https://img.shields.io/github/commit-activity/m/romantitov/MockQueryable)
+![Open Issues](https://img.shields.io/github/issues/romantitov/MockQueryable)
 
+---
 
-Extensions for mocking [Entity Framework Core](https://github.com/aspnet/EntityFrameworkCore/) (EFCore) operations such ToListAsync, FirstOrDefaultAsync etc. by [Moq](https://github.com/moq/moq), [NSubstitute](http://nsubstitute.github.io/) or [FakeItEasy](https://fakeiteasy.github.io/)
-When writing tests for your application it is often desirable to avoid hitting the database. The extensions allow you to achieve this by creating a context – with behavior defined by your tests – that makes use of in-memory data.
+## 💡 Why Use MockQueryable?
 
-### When should I use it?
+Avoid hitting the real database in unit tests when querying via `IQueryable`:
 
-If you have something similar to the following code: 
 ```csharp
 var query = _userRepository.GetQueryable();
 
-await query.AnyAsync(x =>...)
-await query.FirstOrDefaultAsync(x =>...)
-query.CountAsync(x => ...)
-query.ToListAsync()
-//etc.
+await query.AnyAsync(x => ...);
+await query.FirstOrDefaultAsync(x => ...);
+await query.ToListAsync();
+// etc.
 ```
-and you want to cover it by unit tests
 
-### How do I get started?
+---
+
+## 🚀 Getting Started
+
+### 1. Create Test Data
 
 ```csharp
-//1 - create a List<T> with test items
-var users = new List<UserEntity>()
-{
-  new UserEntity{LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
-  ...
-};
-
-//2 - build mock by extension
-var mock = users.BuildMock();
-
-//3 - setup the mock as Queryable for Moq
-_userRepository.Setup(x => x.GetQueryable()).Returns(mock);
-
-//3 - setup the mock as Queryable for NSubstitute
-_userRepository.GetQueryable().Returns(mock);
-
-//3 - setup the mock as Queryable for FakeItEasy
-A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
-```
-
-Do you prefer *DbSet*? 
-
-```csharp
-//2 - build mock by extension
-var mock = users.BuildMockDbSet();
-
-//3 - setup DbSet for Moq
-var userRepository = new TestDbSetRepository(mock.Object);
-
-//3 - setup DbSet for NSubstitute or FakeItEasy
-var userRepository = new TestDbSetRepository(mock);
-
-//3 - setup the mock as Queryable for FakeItEasy
-A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
-```
-### Can I extend the mock object created by MockQueryable with custom logic?
-MockQueryable creates for your tests a mock object based on in-memory data, but you can also add some custome logic to it.
-
-``` C#
-var userId = Guid.NewGuid();
 var users = new List<UserEntity>
 {
-    new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
-   //etc. 
+    new UserEntity { LastName = "Smith", DateOfBirth = new DateTime(2012, 1, 20) },
+    // More test data...
 };
-var mock = users.BuildMockDbSet();
+```
 
-//Aditional setup for FindAsync
+### 2. Build the Mock
+
+```csharp
+var mock = users.BuildMock(); // for IQueryable
+```
+
+### 3. Set Up in Your favorite Mocking Framework
+
+#### Moq
+```csharp
+_userRepository.Setup(x => x.GetQueryable()).Returns(mock);
+```
+
+#### NSubstitute
+```csharp
+_userRepository.GetQueryable().Returns(mock);
+```
+
+#### FakeItEasy
+```csharp
+A.CallTo(() => userRepository.GetQueryable()).Returns(mock);
+```
+
+---
+
+## 🗃️ Mocking `DbSet<T>`
+
+```csharp
+var mockDbSet = users.BuildMockDbSet();
+
+// Moq
+var repo = new TestDbSetRepository(mockDbSet.Object);
+
+// NSubstitute / FakeItEasy
+var repo = new TestDbSetRepository(mockDbSet);
+```
+
+---
+
+## 🔧 Adding Custom Logic
+
+### Example: Custom `FindAsync`
+
+```csharp
 mock.Setup(x => x.FindAsync(userId)).ReturnsAsync((object[] ids) =>
 {
     var id = (Guid)ids[0];
     return users.FirstOrDefault(x => x.Id == id);
 });
-var userRepository = new TestDbSetRepository(mock.Object);
-
-//Execution FindAsync
-var user = await ((DbSet<UserEntity>) userRepository.GetQueryable()).FindAsync(userId);
 ```
 
-You can also add your custom expression visitor with custom logic:
+### Example: Custom Expression Visitor 
+Build a mock with the custom [SampleLikeExpressionVisitor](src/MockQueryable/MockQueryable.Sample/SampleLikeExpressionVisitor.cs) for testing `EF.Functions.Like`
 
-```C#
-
-var users = new List<UserEntity>
-{
-    new UserEntity{Id = userId,LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012")},
-    //etc. 
-};
-
-//Bould mock with custom  SampleLikeExpressionVisitor, that emulates EF.Functions.Like
+```csharp
 var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
-var userRepository = new TestDbSetRepository(mockDbSet.Object);
-
 ```
 
-Check out the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample)
+---
 
-### Where can I get it?
+## 🧩 Extend for Other Frameworks
 
-First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget). 
+You can even create your own extensions. Check the [example here](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs).
 
-If you are using **Moq** - then, install [MockQueryable.Moq](https://www.nuget.org/packages/MockQueryable.Moq/) from the package manager console:
+---
 
-```
-PM> Install-Package MockQueryable.Moq
-```
+## 🔍 Sample Project
 
-If you are using **NSubstitute** - then, install [MockQueryable.NSubstitute](https://www.nuget.org/packages/MockQueryable.NSubstitute/) from the package manager console:
+See the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample) for working examples.
 
-```
-PM> Install-Package MockQueryable.NSubstitute
-```
-
-If you are using **FakeItEasy** - then, install [MockQueryable.FakeItEasy](https://www.nuget.org/packages/MockQueryable.FakeItEasy/) from the package manager console:
-
-```
-PM> Install-Package MockQueryable.FakeItEasy
-```
-
-### Can I use it with my favorite mock framework?
-
-You can install [MockQueryable.EntityFrameworkCore](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/) from the package manager console:
-
-```
-PM> Install-Package MockQueryable.EntityFrameworkCore
-```
-[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.EntityFrameworkCore.svg)](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/)
-
-or even [MockQueryable.Core](https://www.nuget.org/packages/MockQueryable.Core/)
-```
-PM> Install-Package MockQueryable.Core
-```
-[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Core.svg)](https://www.nuget.org/packages/MockQueryable.Core/)
-
-
-Then [make your own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework
-
-
+---
