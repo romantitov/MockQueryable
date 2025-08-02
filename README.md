@@ -2,8 +2,9 @@
 
 Extensions for mocking [Entity Framework Core](https://github.com/dotnet/efcore) async queries like `ToListAsync`, `FirstOrDefaultAsync`, and more using popular mocking libraries such as **Moq**, **NSubstitute**, and **FakeItEasy** — all without hitting the database.
 
+❤️ If you really like the tool, please
 👉 [Support the project](https://github.com/sponsors/romantitov) or
-☕ [Buy me a coffee](https://buymeacoffee.com/romant)
+☕ [Buy me a coffee](https://buymeacoffee.com/romant).
 
 ---
 
@@ -135,4 +136,5 @@ You can even create your own extensions. Check the [example here](https://github
 See the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample) for working examples.
 
 ---
+
 
