@@ -1,14 +1,23 @@
 
 # MockQueryable 
 
+[![MockQueryable.Core](https://img.shields.io/nuget/dt/MockQueryable.Core.svg)](https://www.nuget.org/packages/MockQueryable.Core/)
+[![MockQueryable.EntityFrameworkCore](https://img.shields.io/nuget/dt/MockQueryable.EntityFrameworkCore.svg)](https://www.nuget.org/packages/MockQueryable.EntityFrameworkCore/)
+[![MockQueryable.Moq](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
+[![MockQueryable.NSubstitute](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
+[![MockQueryable.FakeItEasy](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
+
 [![Build status](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)](https://github.com/romantitov/MockQueryable/actions)
 [![Build status](https://ci.appveyor.com/api/projects/status/ggdbipcyyfb4av9e?svg=true)](https://ci.appveyor.com/project/handybudget/mockqueryable)
-[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.Moq.svg)](https://www.nuget.org/packages/MockQueryable.Moq/)
-[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.NSubstitute.svg)](https://www.nuget.org/packages/MockQueryable.NSubstitute/)
-[![Downloads](https://img.shields.io/nuget/dt/MockQueryable.FakeItEasy.svg)](https://www.nuget.org/packages/MockQueryable.FakeItEasy/)
 [![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
-[![Build history](https://buildstats.info/appveyor/chart/handybudget/mockqueryable)](https://ci.appveyor.com/project/handybudget/mockqueryable/history)
+[![GitHub Repo stars](https://img.shields.io/github/stars/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/contributors)
+[![GitHub last commit](https://img.shields.io/github/last-commit/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/commit-activity)
+[![open issues](https://img.shields.io/github/issues/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/issues)
+
+------
 
 
 
@@ -148,3 +157,4 @@ PM> Install-Package MockQueryable.Core
 
 
 Then [make your own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework
+
