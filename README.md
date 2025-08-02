@@ -12,6 +12,7 @@
 [![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/stargazers)
+[![Version](https://badge.fury.io/gh/romantitov%2FMockQueryable.svg)](https://github.com/romantitov/MockQueryable/releases)
 [![GitHub contributors](https://img.shields.io/github/contributors/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/contributors)
 [![GitHub last commit](https://img.shields.io/github/last-commit/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/romantitov/MockQueryable)](https://github.com/romantitov/MockQueryable/graphs/commit-activity)
@@ -157,4 +158,5 @@ PM> Install-Package MockQueryable.Core
 
 
 Then [make your own extension](https://github.com/romantitov/MockQueryable/blob/master/src/MockQueryable/MockQueryable.Moq/MoqExtensions.cs) for your favorite mock framework
+
 
