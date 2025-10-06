@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8</TargetFramework>
+    <TargetFramework>net9</TargetFramework>
     <PackageId>MockQueryable.Core</PackageId>
 		<Authors>Roman Titov</Authors>
 	  <Description>
@@ -14,12 +14,11 @@
 	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageReleaseNotes>
-		  #88  Fix .AsQueryable calls to the test data set - Thanks @Catlandor
-		  #91  Move EF Dependency to v8 - Thanks @johnw86
+		  Upgrade to .Net 9 and EntityFrameworkCore 9
 	  </PackageReleaseNotes>
-	  <Version>8.0.1</Version>
-	  <AssemblyVersion>8.0.1.0</AssemblyVersion>
-	  <FileVersion>8.0.1.0</FileVersion>
+	  <Version>9.0.0</Version>
+	  <AssemblyVersion>9.0.0.0</AssemblyVersion>
+	  <FileVersion>9.0.0.0</FileVersion>
 	  <Company></Company>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -55,19 +55,19 @@ public class TestAsyncEnumerableEfCore<T, TExpressionVisitor> : TestQueryProvide
         // Intercept ExecuteDelete and ExecuteUpdate calls
         if (expression is MethodCallExpression
             {
-                Method.Name: nameof(RelationalQueryableExtensions.ExecuteUpdate)
-                or nameof(RelationalQueryableExtensions.ExecuteDelete)
+                Method.Name: nameof(EntityFrameworkQueryableExtensions.ExecuteUpdate)
+                or nameof(EntityFrameworkQueryableExtensions.ExecuteDelete)
             } methodCall &&
             typeof(TResult) == typeof(int))
         {
             var affectedItems = base.Execute<IEnumerable<T>>(Expression).ToList();
 
-            if (methodCall.Method.Name == nameof(RelationalQueryableExtensions.ExecuteUpdate))
+            if (methodCall.Method.Name == nameof(EntityFrameworkQueryableExtensions.ExecuteUpdate))
             {
                 ApplyUpdateChangesToDbSet(affectedItems, methodCall);
             }
 
-            if (methodCall.Method.Name == nameof(RelationalQueryableExtensions.ExecuteDelete))
+            if (methodCall.Method.Name == nameof(EntityFrameworkQueryableExtensions.ExecuteDelete))
             {
                 foreach (var item in affectedItems)
                 {
