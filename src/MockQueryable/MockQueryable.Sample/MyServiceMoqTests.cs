@@ -13,8 +13,6 @@ namespace MockQueryable.Sample;
 [TestFixture]
 public class MyServiceMoqTests
 {
-   
-
     [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
     [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
     [TestCase("AnyFirstName", "ExistLastName", "01/20/2012", "User already exist")]
@@ -138,26 +136,6 @@ public class MyServiceMoqTests
     }
 
     [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
-    public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
-    {
-        //arrange
-        var userEntities = new List<UserEntity>();
-        var mock = userEntities.BuildMockDbSet();
-
-        mock.Setup(set => set.AddAsync(It.IsAny<UserEntity>(), It.IsAny<CancellationToken>()))
-            .Callback((UserEntity entity, CancellationToken _) => userEntities.Add(entity));
-        var userRepository = new TestDbSetRepository(mock.Object);
-        var service = new MyService(userRepository);
-        //act
-        await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
-        // assert
-        var entity = mock.Object.Single();
-        Assert.That(firstName, Is.EqualTo(entity.FirstName));
-        Assert.That(lastName, Is.EqualTo(entity.LastName));
-        Assert.That(dateOfBirth, Is.EqualTo(entity.DateOfBirth));
-    }
-
-    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
     public async Task DbSetCreatedFromCollectionCreateUser(string firstName, string lastName, DateTime dateOfBirth)
     {
         //arrange
@@ -171,27 +149,10 @@ public class MyServiceMoqTests
         //act
         await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
         // assert
-        var entity = mock.Object.Single();
+        var entity = await mock.Object.SingleAsync();
         Assert.That(firstName, Is.EqualTo(entity.FirstName));
         Assert.That(lastName, Is.EqualTo(entity.LastName));
         Assert.That(dateOfBirth, Is.EqualTo(entity.DateOfBirth));
-    }
-
-    [TestCase("01/20/2012", "06/20/2018", 5)]
-    [TestCase("01/20/2012", "06/20/2012", 4)]
-    [TestCase("01/20/2012", "02/20/2012", 3)]
-    [TestCase("01/20/2010", "02/20/2011", 0)]
-    public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
-    {
-        //arrange
-        var users = TestDataHelper.CreateUserList();
-        var mock = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mock.Object);
-        var service = new MyService(userRepository);
-        //act
-        var result = await service.GetUserReports(from, to);
-        //assert
-        Assert.That(expectedCount, Is.EqualTo(result.Count));
     }
 
     [TestCase("01/20/2012", "06/20/2018", 5)]
@@ -212,19 +173,6 @@ public class MyServiceMoqTests
     }
 
     [TestCase]
-    public async Task DbSetGetAllUserEntity()
-    {
-        //arrange
-        var users = TestDataHelper.CreateUserList();
-        var mock = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mock.Object);
-        //act
-        var result = await userRepository.GetAll();
-        //assert
-        Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [TestCase]
     public async Task DbSetCreatedFromCollectionGetAllUserEntity()
     {
         //arrange
@@ -235,29 +183,6 @@ public class MyServiceMoqTests
         var result = await userRepository.GetAll();
         //assert
         Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [TestCase]
-    public async Task DbSetFindAsyncUserEntity()
-    {
-        //arrange
-        var userId = Guid.NewGuid();
-        var users = TestDataHelper.CreateUserList(userId);
-
-        var mock = users.BuildMockDbSet();
-        mock.Setup(x => x.FindAsync(It.IsAny<object[]>())).ReturnsAsync((object[] ids) =>
-        {
-            var id = (Guid)ids.First();
-            return users.FirstOrDefault(x => x.Id == id);
-        });
-        var userRepository = new TestDbSetRepository(mock.Object);
-
-        //act
-        var result = await ((DbSet<UserEntity>)userRepository.GetQueryable()).FindAsync(userId);
-
-        //assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That("FirstName1", Is.EqualTo(result.FirstName));
     }
 
     [TestCase]
@@ -283,22 +208,6 @@ public class MyServiceMoqTests
     }
 
     [TestCase]
-    public async Task DbSetGetAllUserEntitiesAsync()
-    {
-        // arrange
-        var users = TestDataHelper.CreateUserList();
-
-        var mockDbSet = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mockDbSet.Object);
-
-        // act
-        var result = await userRepository.GetAllAsync().ToListAsync();
-
-        // assert
-        Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [TestCase]
     public async Task DbSetToListAsyncAsync_ShouldReturnAllEntities_WhenSourceIsChanged()
     {
         // arrange
@@ -309,7 +218,7 @@ public class MyServiceMoqTests
 
         // act
         var result1 = await userRepository.GetAllAsync().ToListAsync();
-        users.AddRange( TestDataHelper.CreateUserList());
+        users.AddRange(TestDataHelper.CreateUserList());
         var result2 = await userRepository.GetAllAsync().ToListAsync();
 
         // assert
@@ -409,6 +318,21 @@ public class MyServiceMoqTests
         Assert.That(result.Count(), Is.EqualTo(3));
     }
 
+    [Test]
+    public async Task GetAllUsers_AsQueryableList_AllMatchesReturned()
+    {
+        // arrange
+        var users = TestDataHelper.CreateUserList();
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet.Object);
+
+        // act
+        var result = await userRepository.GetAllAsQueryable();
+
+        // assert
+        Assert.That(users.Count, Is.EqualTo(result.Count()));
+    }
 
     [Test]
     public async Task DbSetCreatedFromCollection_ExecuteDeleteAsync()
@@ -465,8 +389,8 @@ public class MyServiceMoqTests
         //assert
         Assert.That(count, Is.EqualTo(1));
         var user = users.Single(x => x.Id == userId);
-        Assert.That(expectedName, Is.EqualTo(user.FirstName)); 
-        Assert.That(expectedName, Is.EqualTo(user.LastName)); 
+        Assert.That(expectedName, Is.EqualTo(user.FirstName));
+        Assert.That(expectedName, Is.EqualTo(user.LastName));
     }
 
     [Test]
@@ -488,9 +412,9 @@ public class MyServiceMoqTests
         Assert.That(count, Is.EqualTo(0));
 
         var user = users.Single(x => x.Id == userId);
-        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName)); 
-        Assert.That(expectedLastName, Is.EqualTo(user.LastName)); 
+        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName));
+        Assert.That(expectedLastName, Is.EqualTo(user.LastName));
     }
 
-    
+
 }
