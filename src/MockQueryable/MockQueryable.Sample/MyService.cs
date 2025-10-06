@@ -93,6 +93,8 @@ namespace MockQueryable.Sample
 
         Task<List<UserEntity>> GetAll();
 
+        Task<IEnumerable<UserEntity>> GetAllAsQueryable();
+
         IAsyncEnumerable<UserEntity> GetAllAsync();
 
         Task<int> DeleteUserAsync(Guid id);

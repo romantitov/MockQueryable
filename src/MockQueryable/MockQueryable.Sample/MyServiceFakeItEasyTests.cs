@@ -88,32 +88,6 @@ public class MyServiceFakeItEasyTests
     [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
     [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
     [TestCase("AnyFirstName", "ExistLastName", "01/20/2012", "User already exist")]
-    public void DbSetCreateUserIfNotExist(string firstName, string lastName, DateTime dateOfBirth, string expectedError)
-    {
-        // arrange
-        var users = new List<UserEntity>
-        {
-            new() {LastName = "ExistLastName", DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {FirstName = "ExistFirstName"},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-            new() {DateOfBirth = DateTime.Parse("01/20/2012", UsCultureInfo.DateTimeFormat)},
-        };
-        var mock = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mock);
-        var service = new MyService(userRepository);
-
-        // act
-        var ex = Assert.ThrowsAsync<ApplicationException>(() =>
-            service.CreateUserIfNotExist(firstName, lastName, dateOfBirth));
-
-        // assert
-        Assert.That(expectedError, Is.EqualTo(ex.Message));
-    }
-
-    [TestCase("AnyFirstName", "AnyExistLastName", "01/20/2012", "Users with DateOfBirth more than limit")]
-    [TestCase("ExistFirstName", "AnyExistLastName", "02/20/2012", "User with FirstName already exist")]
-    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012", "User already exist")]
     public void DbSetCreatedFromCollectionCreateUserIfNotExist(string firstName, string lastName, DateTime dateOfBirth, string expectedError)
     {
         // arrange
@@ -136,31 +110,6 @@ public class MyServiceFakeItEasyTests
     }
 
     [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
-    public async Task DbSetCreateUser(string firstName, string lastName, DateTime dateOfBirth)
-    {
-        // arrange
-        var userEntities = new List<UserEntity>();
-        var mock = userEntities.BuildMockDbSet();
-        A.CallTo(() => mock.AddAsync(A<UserEntity>._, A<CancellationToken>._))
-            .ReturnsLazily(call =>
-            {
-                userEntities.Add((UserEntity)call.Arguments[0]);
-                return default;
-            });
-        var userRepository = new TestDbSetRepository(mock);
-        var service = new MyService(userRepository);
-
-        // act
-        await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
-
-        // assert
-        var entity = mock.Single();
-        Assert.That(firstName, Is.EqualTo(entity.FirstName));
-        Assert.That(lastName, Is.EqualTo(entity.LastName));
-        Assert.That(dateOfBirth, Is.EqualTo(entity.DateOfBirth));
-    }
-
-    [TestCase("AnyFirstName", "ExistLastName", "01/20/2012")]
     public async Task DbSetCreatedFromCollectionCreateUser1(string firstName, string lastName, DateTime dateOfBirth)
     {
         // arrange
@@ -179,29 +128,10 @@ public class MyServiceFakeItEasyTests
         await service.CreateUserIfNotExist(firstName, lastName, dateOfBirth);
 
         // assert
-        var entity = mock.Single();
+        var entity = await mock.SingleAsync();
         Assert.That(firstName, Is.EqualTo(entity.FirstName));
         Assert.That(lastName, Is.EqualTo(entity.LastName));
         Assert.That(dateOfBirth, Is.EqualTo(entity.DateOfBirth));
-    }
-
-    [TestCase("01/20/2012", "06/20/2018", 5)]
-    [TestCase("01/20/2012", "06/20/2012", 4)]
-    [TestCase("01/20/2012", "02/20/2012", 3)]
-    [TestCase("01/20/2010", "02/20/2011", 0)]
-    public async Task DbSetGetUserReports(DateTime from, DateTime to, int expectedCount)
-    {
-        // arrange
-        var users = TestDataHelper.CreateUserList();
-        var mock = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mock);
-        var service = new MyService(userRepository);
-
-        // act
-        var result = await service.GetUserReports(from, to);
-
-        // assert
-        Assert.That(expectedCount, Is.EqualTo(result.Count));
     }
 
     [TestCase("01/20/2012", "06/20/2018", 5)]
@@ -223,8 +153,8 @@ public class MyServiceFakeItEasyTests
         Assert.That(expectedCount, Is.EqualTo(result.Count));
     }
 
-    [TestCase]
-    public async Task DbSetGetAllUserEntitiesAsync()
+    [Test]
+    public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
     {
         // arrange
         var users = TestDataHelper.CreateUserList();
@@ -234,22 +164,6 @@ public class MyServiceFakeItEasyTests
 
         // act
         var result = await userRepository.GetAllAsync().ToListAsync();
-
-        // assert
-        Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [Test]
-    public async Task DbSetCreatedFromCollectionGetAllUserEntitiesAsync()
-    {
-      // arrange
-      var users = TestDataHelper.CreateUserList();
-
-      var mockDbSet = users.BuildMockDbSet();
-      var userRepository = new TestDbSetRepository(mockDbSet);
-
-      // act
-      var result = await userRepository.GetAllAsync().ToListAsync();
 
         // assert
         Assert.That(users.Count, Is.EqualTo(result.Count));
@@ -276,21 +190,6 @@ public class MyServiceFakeItEasyTests
     }
 
     [Test]
-    public async Task DbSetGetAllUserEntity()
-    {
-        //arrange
-        var users = TestDataHelper.CreateUserList();
-        var mock = users.BuildMockDbSet();
-        var userRepository = new TestDbSetRepository(mock);
-
-        //act
-        var result = await userRepository.GetAll();
-
-        //assert
-        Assert.That(users.Count, Is.EqualTo(result.Count));
-    }
-
-    [Test]
     public async Task DbSetCreatedFromCollectionGetAllUserEntity()
     {
         // arrange
@@ -305,7 +204,7 @@ public class MyServiceFakeItEasyTests
         Assert.That(users.Count, Is.EqualTo(result.Count));
     }
 
-    [TestCase]
+    [Test]
     public void GetUsersByFirstName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
@@ -326,7 +225,7 @@ public class MyServiceFakeItEasyTests
                 "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
     }
 
-    [TestCase]
+    [Test]
     public async Task GetUsersByFirstName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
@@ -342,7 +241,7 @@ public class MyServiceFakeItEasyTests
         Assert.That(result.Count, Is.EqualTo(2));
     }
 
-    [TestCase]
+    [Test]
     public void GetUsersByLastName_ExpressionVisitorMissing_ThrowsException()
     {
         // arrange
@@ -363,7 +262,7 @@ public class MyServiceFakeItEasyTests
                 "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
     }
 
-    [TestCase]
+    [Test]
     public async Task GetUsersByLastName_PartOfNameCaseInsensitiveSearch_AllMatchesReturned()
     {
         // arrange
@@ -379,42 +278,56 @@ public class MyServiceFakeItEasyTests
         Assert.That(result.Count, Is.EqualTo(3));
     }
 
+    [Test]
+    public async Task GetAllUsers_AsQueryableList_AllMatchesReturned()
+    {
+        // arrange
+        var users = TestDataHelper.CreateUserList();
 
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        // act
+        var result = await userRepository.GetAllAsQueryable();
+
+        // assert
+        Assert.That(users.Count, Is.EqualTo(result.Count()));
+    }
 
     [Test]
     public async Task DbSetCreatedFromCollection_ExecuteDeleteAsync()
     {
-      // arrange
-      var userId = Guid.NewGuid();
-      var users = TestDataHelper.CreateUserList(userId);
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
 
-      var mockDbSet = users.BuildMockDbSet();
-      var userRepository = new TestDbSetRepository(mockDbSet);
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
 
-      // act
-      var count = await userRepository.DeleteUserAsync(userId);
+        // act
+        var count = await userRepository.DeleteUserAsync(userId);
 
-      // assert
-      Assert.That(count, Is.EqualTo(1));
-      var updatedUsers = await userRepository.GetAllAsync().ToListAsync();
-      Assert.That(updatedUsers.Any(x => x.Id == userId), Is.EqualTo(false));
+        // assert
+        Assert.That(count, Is.EqualTo(1));
+        var updatedUsers = await userRepository.GetAllAsync().ToListAsync();
+        Assert.That(updatedUsers.Any(x => x.Id == userId), Is.EqualTo(false));
     }
 
     [Test]
     public async Task DbSetCreatedFromCollectionExecuteDeleteAsync_ShouldReturnZero()
     {
-      // arrange
-      var userId = Guid.NewGuid();
-      var users = TestDataHelper.CreateUserList(userId);
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
 
-      var mockDbSet = users.BuildMockDbSet();
-      var userRepository = new TestDbSetRepository(mockDbSet);
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
 
-      //act
-      var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
+        //act
+        var count = await userRepository.DeleteUserAsync(Guid.NewGuid());
 
-      // assert
-      Assert.That(count, Is.EqualTo(0));
+        // assert
+        Assert.That(count, Is.EqualTo(0));
     }
 
     [Test]
@@ -434,8 +347,8 @@ public class MyServiceFakeItEasyTests
         //assert
         Assert.That(count, Is.EqualTo(1));
         var user = users.Single(x => x.Id == userId);
-        Assert.That(expectedName, Is.EqualTo(user.FirstName)); 
-        Assert.That(expectedName, Is.EqualTo(user.LastName)); 
+        Assert.That(expectedName, Is.EqualTo(user.FirstName));
+        Assert.That(expectedName, Is.EqualTo(user.LastName));
     }
 
     [Test]
@@ -457,10 +370,10 @@ public class MyServiceFakeItEasyTests
         Assert.That(count, Is.EqualTo(0));
 
         var user = users.Single(x => x.Id == userId);
-        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName)); 
-        Assert.That(expectedLastName, Is.EqualTo(user.LastName)); 
+        Assert.That(expectedFirstName, Is.EqualTo(user.FirstName));
+        Assert.That(expectedLastName, Is.EqualTo(user.LastName));
     }
 
 
-   
+
 }
