@@ -15,6 +15,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReleaseNotes>
 			#88  MockQueryable.NSubstitute 8.0.0 Breaks .AsQueryable() calls on DbSet - Thanks @Catlandor
+			#91  Move EF Dependency to v8 - Thanks @johnw86
 		</PackageReleaseNotes>
 		<Version>8.0.1</Version>
 		<AssemblyVersion>8.0.1.0</AssemblyVersion>
