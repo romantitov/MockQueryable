@@ -319,19 +319,20 @@ public class MyServiceMoqTests
     }
 
     [Test]
-    public async Task GetAllUsers_AsQueryableList_AllMatchesReturned()
+    public async Task GetUsersCount_AsQueryable_CountMatchesReturned()
     {
         // arrange
-        var users = TestDataHelper.CreateUserList();
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
 
         var mockDbSet = users.BuildMockDbSet();
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
-        var result = await userRepository.GetAllAsQueryable();
+        var result = await userRepository.GetQueryable().Where(x=>x.Id != userId).CountAsync();
 
         // assert
-        Assert.That(users.Count, Is.EqualTo(result.Count()));
+        Assert.That(users.Count - 1, Is.EqualTo(result));
     }
 
     [Test]
