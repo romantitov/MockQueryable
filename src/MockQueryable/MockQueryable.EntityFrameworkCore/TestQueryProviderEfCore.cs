@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -92,29 +94,78 @@ public class TestAsyncEnumerableEfCore<T, TExpressionVisitor> : TestQueryProvide
     private static void ApplyUpdateChangesToDbSet(IEnumerable<T> affectedItems,
         MethodCallExpression methodCallExpression)
     {
-        // Extract the update lambda: opt => opt.SetProperty(...)
-        if ((methodCallExpression.Arguments[1] as UnaryExpression)?.Operand is not LambdaExpression updateLambda)
+
+        if (methodCallExpression.Arguments[1] is not NewArrayExpression arrayExpr)
         {
             return;
         }
 
-        // The body may be a chain of MethodCallExpressions
-        var currentCall = updateLambda.Body as MethodCallExpression;
-        while (currentCall is { Method.Name: nameof(SetPropertyCalls<T>.SetProperty) })
+
+        foreach (var element in arrayExpr.Expressions.Cast<NewExpression>())
         {
-            var memberExpr = currentCall.Arguments[0] as LambdaExpression;
-            var valueExpr = currentCall.Arguments[1];
-
-            var propertyInfo = ((memberExpr.Body as MemberExpression)?.Member) as System.Reflection.PropertyInfo;
-            var value = Expression.Lambda(valueExpr).Compile().DynamicInvoke();
-
-            foreach (var item in affectedItems)
+            var lambdaExpr = ExtractLambda(element.Arguments[0]);
+            if (element.Arguments[1] is ConstantExpression constExpr)
             {
-                propertyInfo?.SetValue(item, value);
-            }
+                var value = constExpr.Value;
 
-            // Move to the next chained call (if any)
-            currentCall = currentCall.Object as MethodCallExpression;
+                foreach (var item in affectedItems)
+                {
+                    SetProperty(item, lambdaExpr, value);
+                }
+            }
+            
+            
         }
+
+
     }
+
+    private static LambdaExpression ExtractLambda(Expression expr)
+    {
+
+        if (expr is UnaryExpression { NodeType: ExpressionType.Quote } unary)
+        {
+            expr = unary.Operand;
+        }
+
+        if (expr is UnaryExpression { NodeType: ExpressionType.Convert } unary2)
+        {
+            expr = unary2.Operand;
+        }
+
+        return expr as LambdaExpression;
+    }
+
+
+
+    private static void SetProperty(T item, LambdaExpression lambda, object value)
+    {
+        var body = lambda.Body;
+
+
+        if (body is UnaryExpression { NodeType: ExpressionType.Convert } unary)
+        {
+            body = unary.Operand;
+        }
+
+        if (body is not MemberExpression memberExpr)
+        {
+            return;
+        }
+
+        if (memberExpr.Member is not PropertyInfo prop)
+        {
+            return;
+        }
+
+        var converted = value;
+
+        if (value != null && !prop.PropertyType.IsInstanceOfType(value))
+        {
+            converted = Convert.ChangeType(value, prop.PropertyType);
+        }
+
+        prop.SetValue(item, converted);
+    }
+
 }
