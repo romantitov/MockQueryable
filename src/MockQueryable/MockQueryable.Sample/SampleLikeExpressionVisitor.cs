@@ -40,4 +40,5 @@ public class SampleLikeExpressionVisitor : ExpressionVisitor
 
         return base.VisitMethodCall(node);
     }
+
 }

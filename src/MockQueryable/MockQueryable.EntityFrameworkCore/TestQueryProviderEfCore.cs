@@ -104,20 +104,51 @@ public class TestAsyncEnumerableEfCore<T, TExpressionVisitor> : TestQueryProvide
         foreach (var element in arrayExpr.Expressions.Cast<NewExpression>())
         {
             var lambdaExpr = ExtractLambda(element.Arguments[0]);
-            if (element.Arguments[1] is ConstantExpression constExpr)
-            {
-                var value = constExpr.Value;
+            
 
-                foreach (var item in affectedItems)
-                {
-                    SetProperty(item, lambdaExpr, value);
-                }
+            foreach (var item in affectedItems)
+            {
+                var value = ExtractValue(element.Arguments[1], item);
+                SetProperty(item, lambdaExpr, value);
             }
             
             
         }
 
 
+    }
+
+    private static object ExtractValue(Expression expr, T item)
+    {
+
+        if (expr is UnaryExpression { NodeType: ExpressionType.Quote } u)
+        {
+            expr = u.Operand;
+        }
+
+        // 1. Simply constants: "Unit Test", 123, DateTime.Now...
+        if (expr is ConstantExpression constExpr)
+            return constExpr.Value;
+
+
+        // 2. Lambdas: x => x.DateOfBirth.AddYears(1) or () => DateTime.UtcNow
+        if (expr is LambdaExpression lambda)
+        {
+            var del = lambda.Compile();
+
+            return lambda.Parameters.Count switch
+            {
+                0 => del.DynamicInvoke(),                // () => something
+                1 => del.DynamicInvoke(item),            // x => something with x (item)
+                _ => throw new InvalidOperationException(
+                    "Supported only lambdas with 0 or 1 params.")
+            };
+        }
+
+        
+
+        var lambdaNoParams = Expression.Lambda(expr);
+        return lambdaNoParams.Compile().DynamicInvoke();
     }
 
     private static LambdaExpression ExtractLambda(Expression expr)
@@ -167,5 +198,6 @@ public class TestAsyncEnumerableEfCore<T, TExpressionVisitor> : TestQueryProvide
 
         prop.SetValue(item, converted);
     }
+
 
 }

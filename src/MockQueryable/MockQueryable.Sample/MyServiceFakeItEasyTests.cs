@@ -375,6 +375,47 @@ public class MyServiceFakeItEasyTests
         Assert.That(expectedLastName, Is.EqualTo(user.LastName));
     }
 
+    [Test]
+    public async Task DbSetValueExpressionExecuteUpdateAsync()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+        var valueBeforeChange = users.Single(x => x.Id == userId).DateOfBirth;
+
+        var mockDbSet = users.BuildMockDbSet();
+        var userRepository = new TestDbSetRepository(mockDbSet);
+
+        //act
+        var count = await userRepository.AddYearToDateOfBirth(userId);
+
+        //assert
+        Assert.That(count, Is.EqualTo(1));
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(valueBeforeChange.AddYears(1), Is.EqualTo(user.DateOfBirth));
+
+    }
 
 
+    [Test]
+    public async Task DbSetValueSetDateOfBirthExecuteUpdateAsync()
+    {
+        // arrange
+        var userId = Guid.NewGuid();
+        var users = TestDataHelper.CreateUserList(userId);
+        var expectedYear = DateTime.Now.Year + 42;
+
+        var mockDbSet = users.BuildMockDbSet();
+        var dbset = mockDbSet;
+
+        //act
+        var count = await dbset.Where(x => x.Id == userId)
+            .ExecuteUpdateAsync(opt => opt.SetProperty(x => x.DateOfBirth, x => new DateTime(expectedYear, 10, 14, 0, 0, 0)));
+
+        //assert
+        Assert.That(count, Is.EqualTo(1));
+        var user = users.Single(x => x.Id == userId);
+        Assert.That(expectedYear, Is.EqualTo(user.DateOfBirth.Year));
+
+    }
 }

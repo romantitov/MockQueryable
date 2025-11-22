@@ -62,5 +62,13 @@ namespace MockQueryable.Sample
             return await _dbSet.Where(x => x.Id == id)
                 .ExecuteUpdateAsync(opt => opt.SetProperty(x => x.FirstName, firstName).SetProperty(x => x.LastName, firstName));
         }
+
+        public async Task<int> AddYearToDateOfBirth(Guid id)
+        {
+            return await _dbSet.Where(x => x.Id == id)
+                .ExecuteUpdateAsync(opt => opt.SetProperty(x => x.DateOfBirth, x => x.DateOfBirth.AddYears(1)));
+        }
+
+        
     }
 }

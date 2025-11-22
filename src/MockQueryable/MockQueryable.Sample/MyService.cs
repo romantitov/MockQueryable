@@ -98,6 +98,7 @@ namespace MockQueryable.Sample
         Task<int> DeleteUserAsync(Guid id);
 
         Task<int> UpdateFirstAndLastNameByIdAsync(Guid id, string firstName);
+        Task<int> AddYearToDateOfBirth(Guid id);
     }
 
   public class UserReport

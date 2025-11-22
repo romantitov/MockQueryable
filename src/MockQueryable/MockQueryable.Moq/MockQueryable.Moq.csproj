@@ -14,11 +14,11 @@
 	  <PackageTags>Mock EntityFrameworkCore Queryable mock EF UnitTests EntityFrameworkCore</PackageTags>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageReleaseNotes>
-		  Upgrade to .Net 10 and EntityFrameworkCore 10
+		  #93 ExecuteUpdateAsync not suported with SetProperty with Value Expression - fixed
 	  </PackageReleaseNotes>
-	  <Version>10.0.0</Version>
-	  <AssemblyVersion>10.0.0.0</AssemblyVersion>
-	  <FileVersion>10.0.0.0</FileVersion>
+	  <Version>10.0.1</Version>
+	  <AssemblyVersion>10.0.0.1</AssemblyVersion>
+	  <FileVersion>10.0.0.1</FileVersion>
     <Company></Company>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
