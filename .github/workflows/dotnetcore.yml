@@ -22,10 +22,10 @@ jobs:
             --configuration Release \
             --no-build \
             /p:CollectCoverage=true \
-            /p:CoverletOutput=./TestResults/coverage/ \
+            /p:CoverletOutput=$COVERAGE_PATH \
             /p:CoverletOutputFormat=opencover
     - name: Upload coverage results (artifact)
       uses: actions/upload-artifact@v4
       with:
           name: code-coverage
-          path: ./TestResults
+          path: TestResults
