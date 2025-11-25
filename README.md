@@ -22,6 +22,7 @@ Extensions for mocking [Entity Framework Core](https://github.com/dotnet/efcore)
 
 ## ✅ Build & Status
 
+[![codecov](https://codecov.io/github/romantitov/MockQueryable/graph/badge.svg?token=dtiYMUNHUo)](https://codecov.io/github/romantitov/MockQueryable)
 ![.NET Core](https://github.com/romantitov/MockQueryable/workflows/.NET%20Core/badge.svg)
 [![License](https://img.shields.io/github/license/romantitov/MockQueryable.svg)](https://github.com/romantitov/MockQueryable/blob/master/LICENSE)
 
@@ -135,6 +136,7 @@ You can even create your own extensions. Check the [example here](https://github
 See the [sample project](https://github.com/romantitov/MockQueryable/tree/master/src/MockQueryable/MockQueryable.Sample) for working examples.
 
 ---
+
 
 
 
