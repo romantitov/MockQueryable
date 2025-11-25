@@ -16,5 +16,16 @@ jobs:
         
     - name: Build with dotnet
       run: dotnet build src/MockQueryable/*.sln --configuration Release
-    - name: Test with dotnet
-      run: dotnet test src/MockQueryable/*.sln
+    - name: Test with coverage (coverlet)
+      run: |
+          dotnet test src/MockQueryable/*.sln \
+            --configuration Release \
+            --no-build \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput=./TestResults/coverage/ \
+            /p:CoverletOutputFormat=opencover
+    - name: Upload coverage results (artifact)
+      uses: actions/upload-artifact@v4
+      with:
+          name: code-coverage
+          path: ./TestResults
