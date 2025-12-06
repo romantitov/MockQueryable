@@ -272,6 +272,7 @@ public class MyServiceMoqTests
         var users = TestDataHelper.CreateUserList();
 
         var mockDbSet = users.BuildMockDbSet<UserEntity, SampleLikeExpressionVisitor>();
+        
         var userRepository = new TestDbSetRepository(mockDbSet.Object);
 
         // act
@@ -297,7 +298,7 @@ public class MyServiceMoqTests
         Assert.That(
             exception.Message,
             Is.EqualTo(
-                "The 'Like' method is not supported because the query has switched to client-evaluation. " +
+                "The 'ILike' method is not supported because the query has switched to client-evaluation. " +
                 "This usually happens when the arguments to the method cannot be translated to server. " +
                 "Rewrite the query to avoid client evaluation of arguments so that method can be translated to server."));
     }

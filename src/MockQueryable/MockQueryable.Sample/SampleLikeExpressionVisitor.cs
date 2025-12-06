@@ -18,8 +18,7 @@ public class SampleLikeExpressionVisitor : ExpressionVisitor
     /// </summary>
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        //TODO: Use nameof(NpgsqlDbFunctionsExtensions.ILike) after upgrade to 10.0 version
-        if (node.Method.Name is "ILike" or nameof(DbFunctionsExtensions.Like) &&
+        if (node.Method.Name is nameof(NpgsqlDbFunctionsExtensions.ILike) or nameof(DbFunctionsExtensions.Like) &&
             node.Arguments.Count == 3)
         {
 

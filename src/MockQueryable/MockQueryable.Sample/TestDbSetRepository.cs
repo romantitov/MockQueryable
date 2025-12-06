@@ -45,9 +45,8 @@ namespace MockQueryable.Sample
 
         public async Task<IEnumerable<UserEntity>> GetUsersByLastName(string firstName)
         {
-            //TODO: change back to EF.Functions.ILike
             return await _dbSet
-                .Where(x => EF.Functions.Like(x.LastName, $"%{firstName}%"))
+                .Where(x => EF.Functions.ILike(x.LastName, $"%{firstName}%"))
                 .ToListAsync();
         }
 
