@@ -16,5 +16,30 @@ jobs:
         
     - name: Build with dotnet
       run: dotnet build src/MockQueryable/*.sln --configuration Release
-    - name: Test with dotnet
-      run: dotnet test src/MockQueryable/*.sln
+    - name: Test with coverage (coverlet)
+      run: |
+          mkdir -p TestResults
+
+          COVERAGE_DIR="$(pwd)/TestResults"
+          
+          dotnet test src/MockQueryable/*.sln \
+            --configuration Release \
+            --no-build \
+            /p:CollectCoverage=true \
+            /p:CoverletOutput="$COVERAGE_DIR/coverage-" \
+            /p:CoverletOutputFormat=opencover
+
+            ls -R "$COVERAGE_DIR" || echo Empty folder
+    - name: Upload coverage results (artifact)
+      uses: actions/upload-artifact@v4
+      with:
+          name: code-coverage
+          path: TestResults
+          
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+          files: TestResults/**/*.opencover.xml
+          flags: unittests
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
